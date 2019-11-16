@@ -61,7 +61,7 @@ int main(int argc, char *argv[]) {
 				inc++;
 				inv[inc] = strtok(NULL, delimiters);
 			}
-		} while (inc < 1);
+		} while (inc < 0);
 		
 		/* invoke the chatbot */
 		done = chatbot_main(inc, inv, output, MAX_RESPONSE);
