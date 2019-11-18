@@ -31,10 +31,26 @@
  *   KB_NOTFOUND, if no response could be found
  *   KB_INVALID, if 'intent' is not a recognised question word
  */
+ 
+struct node {
+	char entity[MAX_ENTITY];
+	char answer[MAX_RESPONSE];
+	struct node *next;
+};
+ 
+typedef struct node NODE;
+NODE *wholinkedlist[27] = {A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z}; // an array of pointers which is the head of their linkedlist
+NODE **who = wholinkedlist, *what[27], *where[27];
+
 int knowledge_get(const char *intent, const char *entity, char *response, int n) {
 	
 	/* to be implemented */
+	printf("running knowledge_get, intent is: %s\n", intent);
+	printf("entity is %s\n", entity);
 	
+	
+	
+	snprintf(response, n, entity);
 	return KB_NOTFOUND;
 	
 }
