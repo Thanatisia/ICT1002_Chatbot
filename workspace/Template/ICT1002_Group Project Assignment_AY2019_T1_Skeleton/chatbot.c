@@ -174,7 +174,16 @@ int chatbot_is_load(const char *intent) {
 int chatbot_do_load(int inc, char *inv[], char *response, int n) {
 	
 	/* to be implemented */
-	 
+	int loadedlist;
+	char filename[255];
+	strcpy(filename, inv[1]);
+	FILE *f = fopen(filename, "r");
+	if (f == NULL) {
+		printf("Could not open %s file\n", filename);
+		return 1;
+	}
+	loadedlist = knowledge_read(f);
+	snprintf(response, n, "Read %d responses from %s.", loadedlist, filename);
 	return 0;
 	 
 }
@@ -270,7 +279,7 @@ int chatbot_do_reset(int inc, char *inv[], char *response, int n) {
 	
 	/* to be implemented */
 	knowledge_reset();
-	snprintf(response, n, "Chatbot reset");
+	snprintf(response, n, "%s reset", chatbot_botname());
 	return 0;
 	 
 }
@@ -307,9 +316,23 @@ int chatbot_is_save(const char *intent) {
 int chatbot_do_save(int inc, char *inv[], char *response, int n) {
 	
 	/* to be implemented */
+	char filename[255];
+	if(compare_token(inv[1], "as") == 0) {//if the inv[1] is "as"
+		printf("Running inv[1] is \"as\"\n");
+		strcpy(filename, inv[2]);
+	}
+	else
+		strcpy(filename, inv[1]);
+	FILE *f = fopen(filename, "w");
+	if (f == NULL) {
+		printf("Could not open %s file\n", filename);
+		return 1;
+	}
+	knowledge_write(f);
+	fclose(f);
+	snprintf(response, n, "My knowledge has been saved to %s.", filename);
 	
 	return 0;
-	 
 }
  
  
@@ -329,7 +352,7 @@ int chatbot_is_smalltalk(const char *intent) {
 	/* to be implemented */
 	//return compare_token(intent, "exit") == 0 || compare_token(intent, "quit") == 0;
 	//return 0; //return 0 when intent is "who", "what", "where", "save", "load", "reset". 
-	return compare_token(intent, "hi") == 0 || compare_token(intent, "hello") == 0 || compare_token(intent, "how") == 0 || compare_token(intent, "yo") == 0|| compare_token(intent, "!") == 0;
+	return compare_token(intent, "hi") == 0 || compare_token(intent, "hello") == 0 || compare_token(intent, "how") == 0 || compare_token(intent, "yo") == 0;
 }
 
 
