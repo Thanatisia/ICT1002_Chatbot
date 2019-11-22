@@ -14,7 +14,7 @@
 #include "chat1002.h"
 
 /* word delimiters */
-const char *delimiters = " ?\t\n";
+const char *delimiters = " ?!\t\n";
  
  
 /*
