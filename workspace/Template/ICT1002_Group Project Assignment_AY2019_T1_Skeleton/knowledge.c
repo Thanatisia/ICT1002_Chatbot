@@ -39,14 +39,7 @@ typedef struct node {
 	struct node *next;
 }NODE, *NODEptr;
 
-//const NODEptr Awho = NULL, Bwho = NULL, Cwho = NULL, Dwho = NULL, Ewho = NULL, Fwho = NULL, Gwho = NULL, Hwho = NULL, Iwho = NULL, Jwho = NULL, Kwho = NULL, Lwho = NULL, Mwho = NULL, Nwho = NULL, Owho = NULL, Pwho = NULL, Qwho = NULL, Rwho = NULL, Swho = NULL, Twho = NULL, Uwho = NULL, Vwho = NULL, Wwho = NULL, Xwho = NULL, Ywho = NULL, Zwho = NULL;
-//const NODEptr Awhat = NULL, Bwhat = NULL, Cwhat = NULL, Dwhat = NULL, Ewhat = NULL, Fwhat = NULL, Gwhat = NULL, Hwhat = NULL, Iwhat = NULL, Jwhat = NULL, Kwhat = NULL, Lwhat = NULL, Mwhat = NULL, Nwhat = NULL, Owhat = NULL, Pwhat = NULL, Qwhat = NULL, Rwhat = NULL, Swhat = NULL, Twhat = NULL, Uwhat = NULL, Vwhat = NULL, Wwhat = NULL, Xwhat = NULL, Ywhat = NULL, Zwhat = NULL;
-//const NODEptr Awhere = NULL, Bwhere = NULL, Cwhere = NULL, Dwhere = NULL, Ewhere = NULL, Fwhere = NULL, Gwhere = NULL, Hwhere = NULL, Iwhere = NULL, Jwhere = NULL, Kwhere = NULL, Lwhere = NULL, Mwhere = NULL, Nwhere = NULL, Owhere = NULL, Pwhere = NULL, Qwhere = NULL, Rwhere = NULL, Swhere = NULL, Twhere = NULL, Uwhere = NULL, Vwhere = NULL, Wwhere = NULL, Xwhere = NULL, Ywhere = NULL, Zwhere = NULL;
-
-//NODEptr who[26] = {Awho, Bwho, Cwho, Dwho, Ewho, Fwho, Gwho, Hwho, Iwho, Jwho, Kwho, Lwho, Mwho, Nwho, Owho, Pwho, Qwho, Rwho, Swho, Twho, Uwho, Vwho, Wwho, Xwho, Ywho, Zwho}, what[27] = {Awhat, Bwhat, Cwhat, Dwhat, Ewhat, Fwhat, Gwhat, Hwhat, Iwhat, Jwhat, Kwhat, Lwhat, Mwhat, Nwhat, Owhat, Pwhat, Qwhat, Rwhat, Swhat, Twhat, Uwhat, Vwhat, Wwhat, Xwhat, Ywhat, Zwhat}, where[27] = {Awhere, Bwhere, Cwhere, Dwhere, Ewhere, Fwhere, Gwhere, Hwhere, Iwhere, Jwhere, Kwhere, Lwhere, Mwhere, Nwhere, Owhere, Pwhere, Qwhere, Rwhere, Swhere, Twhere, Uwhere, Vwhere, Wwhere, Xwhere, Ywhere, Zwhere}; //{A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z} an array of pointers which is the head of their linkedlist
-//NODE *who = wholinkedlist, *what[27], *where[27];
-
-NODEptr who[26] = {}, what[26]= {}, where[26] = {}, head, temp; // 26 for 26 different alphabets
+NODEptr who[27] = {}, what[27]= {}, where[27] = {}, head, temp; // 26 different alphabets + nonalpha characters
 
 int knowledge_get(const char *intent, const char *entity, char *response, int n) {
 	
@@ -56,7 +49,15 @@ int knowledge_get(const char *intent, const char *entity, char *response, int n)
 	
 	//if answer is found in the linkedlist then return KB_OK (0)
 	int intentflag;
-	int index = tolower(entity[0]) % 'a'; //to find the first letter of entity in the head pointer array
+
+	int index;
+	if (!isalpha(entity[0])) {
+		index = 26;
+	}
+	else {
+		int index = tolower(entity[0]) % 'a'; //to find the first letter of entity in the head pointer array
+	}
+	
 	printf("index is: %d\n", index);
 	if (compare_token(intent, "who") == 0){
 		intentflag = 0;
@@ -116,7 +117,15 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
 	
 	/* to be implemented */
 	int intentflag;
-	int index = tolower(entity[0]) % 'a'; //to find the first letter of entity in the head pointer array
+
+	int index;
+	if (!isalpha(entity[0])) {
+		index = 26;
+	}
+	else {
+		int index = tolower(entity[0]) % 'a'; //to find the first letter of entity in the head pointer array
+	}
+
 	char test[2] = "";
 	printf("running knowledge_put\n");
 	if (compare_token(intent, "who") == 0){
@@ -276,7 +285,14 @@ int read_section (char *section, LPCSTR ini) {
 		NODEptr* listPtr = NULL;
 
 		// Set the head to the correct linked list
-		int index = tolower(ini_key[0]) % 'a';
+		int index;
+		if (!isalpha(ini_key[0])) {
+			index = 26;
+		}
+		else {
+			int index = tolower(ini_key[0]) % 'a'; 
+		}
+
 		if (section == "what") {
 			head = what[index];
 			listPtr = &what[index];
