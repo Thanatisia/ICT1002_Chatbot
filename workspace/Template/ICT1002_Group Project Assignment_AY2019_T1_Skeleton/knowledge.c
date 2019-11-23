@@ -38,13 +38,6 @@ typedef struct node {
 	struct node *next;
 }NODE, *NODEptr;
 
-//const NODEptr Awho = NULL, Bwho = NULL, Cwho = NULL, Dwho = NULL, Ewho = NULL, Fwho = NULL, Gwho = NULL, Hwho = NULL, Iwho = NULL, Jwho = NULL, Kwho = NULL, Lwho = NULL, Mwho = NULL, Nwho = NULL, Owho = NULL, Pwho = NULL, Qwho = NULL, Rwho = NULL, Swho = NULL, Twho = NULL, Uwho = NULL, Vwho = NULL, Wwho = NULL, Xwho = NULL, Ywho = NULL, Zwho = NULL;
-//const NODEptr Awhat = NULL, Bwhat = NULL, Cwhat = NULL, Dwhat = NULL, Ewhat = NULL, Fwhat = NULL, Gwhat = NULL, Hwhat = NULL, Iwhat = NULL, Jwhat = NULL, Kwhat = NULL, Lwhat = NULL, Mwhat = NULL, Nwhat = NULL, Owhat = NULL, Pwhat = NULL, Qwhat = NULL, Rwhat = NULL, Swhat = NULL, Twhat = NULL, Uwhat = NULL, Vwhat = NULL, Wwhat = NULL, Xwhat = NULL, Ywhat = NULL, Zwhat = NULL;
-//const NODEptr Awhere = NULL, Bwhere = NULL, Cwhere = NULL, Dwhere = NULL, Ewhere = NULL, Fwhere = NULL, Gwhere = NULL, Hwhere = NULL, Iwhere = NULL, Jwhere = NULL, Kwhere = NULL, Lwhere = NULL, Mwhere = NULL, Nwhere = NULL, Owhere = NULL, Pwhere = NULL, Qwhere = NULL, Rwhere = NULL, Swhere = NULL, Twhere = NULL, Uwhere = NULL, Vwhere = NULL, Wwhere = NULL, Xwhere = NULL, Ywhere = NULL, Zwhere = NULL;
-
-//NODEptr who[26] = {Awho, Bwho, Cwho, Dwho, Ewho, Fwho, Gwho, Hwho, Iwho, Jwho, Kwho, Lwho, Mwho, Nwho, Owho, Pwho, Qwho, Rwho, Swho, Twho, Uwho, Vwho, Wwho, Xwho, Ywho, Zwho}, what[27] = {Awhat, Bwhat, Cwhat, Dwhat, Ewhat, Fwhat, Gwhat, Hwhat, Iwhat, Jwhat, Kwhat, Lwhat, Mwhat, Nwhat, Owhat, Pwhat, Qwhat, Rwhat, Swhat, Twhat, Uwhat, Vwhat, Wwhat, Xwhat, Ywhat, Zwhat}, where[27] = {Awhere, Bwhere, Cwhere, Dwhere, Ewhere, Fwhere, Gwhere, Hwhere, Iwhere, Jwhere, Kwhere, Lwhere, Mwhere, Nwhere, Owhere, Pwhere, Qwhere, Rwhere, Swhere, Twhere, Uwhere, Vwhere, Wwhere, Xwhere, Ywhere, Zwhere}; //{A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z} an array of pointers which is the head of their linkedlist
-//NODE *who = wholinkedlist, *what[27], *where[27];
-
 NODEptr who[26] = {}, what[26]= {}, where[26] = {}, head, temp; // 26 for 26 different alphabets
 
 int knowledge_get(const char *intent, const char *entity, char *response, int n) {
