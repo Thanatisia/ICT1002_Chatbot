@@ -225,23 +225,50 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 	
 	/* to be implemented */
 	char entity[MAX_ENTITY] = "";
+	char reply[MAX_RESPONSE] = "I dont know. ";
+	char userinput[MAX_RESPONSE] = "";
+	int result = 0, result2 = -2; //result is for knowledge_get while result2 is for knowledge_put
 	if (compare_token(inv[1], "are") == 0 || compare_token(inv[1], "is") == 0) {//if the inv[1] is "is" or "are"
 		printf("running inv[1] is either 'is' or 'are'\n");
-		for (int i = 2; i<inc; i++){
-			strcat(entity, inv[i]);
-			strcat(entity, " ");
+		for (int i = 2; i<inc; i++){ //to get entity without the intent and "is" or "are"
+			strncat(entity, inv[i], strlen(inv[i])); //in case there is a single character in entity
+			if (i<inc-1)
+				strcat(entity, " "); //add spaces between words unless it is the last word
 		}
-		knowledge_get(inv[0], entity, response, n);
+		result = knowledge_get(inv[0], entity, response, n);
 		
 	}
 	else {//If the inv[1] is neither "is" or "are"
 		printf("running inv[1] is neither 'is' nor 'are'\n");
-		for (int i = 1; i<inc; i++){
-			strcat(entity, inv[i]);
-			strcat(entity, " ");
+		for (int i = 1; i<inc; i++){ // to get entity without the intent
+			strncat(entity, inv[i], strlen(inv[i])); //in case there is a single character in entity
+			if (i<inc-1)
+				strcat(entity, " "); //add spaces between words unless it is the last word
 		}
-		knowledge_get(inv[0], entity, response, n);
+		result = knowledge_get(inv[0], entity, response, n);
 	}
+	
+	printf("result is: %d\n", result);
+	
+	if (result == -2)
+		snprintf(response, n, "Error in intent");
+	else if (result == -1){ //get answer from user
+		for (int i = 0; i<inc; i++){ // to get everything in inv
+			strncat(userinput, inv[i], strlen(inv[i])); //in case there is a single character in response
+			if(i<inc-1)
+				strcat(userinput, " "); //add spaces between words unless it is the last word
+		}
+		strcpy(reply, userinput); //reply will have "I don't know" plus user response
+		printf("Going to prompt user for answer\n");
+		prompt_user(response, n, reply);
+		result2 = knowledge_put(inv[0], entity, response); // check if user answer is inside knowledge
+		if (result2 == 0)
+			snprintf(response, n, "Thank you.");
+		else if (result2 == -2)
+			snprintf(response, n, ":-(");
+	}
+	
+	
 	return 0;
 	 
 }
