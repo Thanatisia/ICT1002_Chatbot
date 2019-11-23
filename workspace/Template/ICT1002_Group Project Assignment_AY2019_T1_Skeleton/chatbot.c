@@ -258,7 +258,8 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 			if(i<inc-1)
 				strcat(userinput, " "); //add spaces between words unless it is the last word
 		}
-		strcpy(reply, userinput); //reply will have "I don't know" plus user response
+		strcat(reply, userinput); //reply will have "I don't know" plus user response
+		strcat(reply, "?");
 		printf("Going to prompt user for answer\n");
 		prompt_user(response, n, reply);
 		result2 = knowledge_put(inv[0], entity, response); // check if user answer is inside knowledge
