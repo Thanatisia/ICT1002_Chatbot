@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <Windows.h>
 #include "chat1002.h"
 
 /*
@@ -55,7 +56,7 @@ int knowledge_get(const char *intent, const char *entity, char *response, int n)
 	
 	//if answer is found in the linkedlist then return KB_OK (0)
 	int intentflag;
-	int index = entity[0]%26; //to find the first letter of entity in the head pointer array
+	int index = tolower(entity[0]) % 'a'; //to find the first letter of entity in the head pointer array
 	printf("index is: %d\n", index);
 	if (compare_token(intent, "who") == 0){
 		intentflag = 0;
@@ -115,7 +116,7 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
 	
 	/* to be implemented */
 	int intentflag;
-	int index = entity[0]%26; //to find the first letter of entity in the head pointer array
+	int index = tolower(entity[0]) % 'a'; //to find the first letter of entity in the head pointer array
 	char test[2] = "";
 	printf("running knowledge_put\n");
 	if (compare_token(intent, "who") == 0){
@@ -253,11 +254,71 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
  *
  * Returns: the number of entity/response pairs successful read from the file
  */
-int knowledge_read(FILE *f) {
-	
-	/* to be implemented */
-	
-	return 0;
+int knowledge_read(LPCSTR ini) {
+	int count = 0;
+	count += read_section("what", ini);
+	count += read_section("where", ini);
+	count += read_section("who", ini);
+	return count;
+}
+
+int read_section (char *section, LPCSTR ini) {
+	int count = 0;
+
+	// Get all keys in the section
+	char ini_keys[MAX_KEYS];
+	GetPrivateProfileString(section, NULL, NULL, ini_keys, MAX_KEYS, ini);
+
+	char *ini_key = ini_keys;
+
+	// Loop through all entities in current section
+	while (*ini_key) {
+		NODEptr* listPtr = NULL;
+
+		// Set the head to the correct linked list
+		int index = tolower(ini_key[0]) % 'a';
+		if (section == "what") {
+			head = what[index];
+			listPtr = &what[index];
+		}
+		else if (section == "who") {
+			head = who[index];
+			listPtr = &who[index];
+		}
+		else {
+			head = where[index];
+			listPtr = &where[index];
+		}
+
+		// Traverse to end of linked list
+		while (head != NULL && head->next != NULL) {
+			head = head->next;
+		}
+
+		// Create new node to store data
+		temp = (NODEptr)malloc(sizeof(NODE));
+		temp->next = NULL;
+		temp->entity = (char*)malloc(sizeof(char) * strlen(ini_key));
+		strcpy(temp->entity, ini_key);
+		char temp_response[MAX_RESPONSE];
+		GetPrivateProfileString(section, ini_key, NULL, temp_response, MAX_RESPONSE, ini);
+		temp->answer = (char*)malloc(sizeof(char) * strlen(temp_response));
+		strcpy(temp->answer, temp_response);
+
+		//printf("%d\n%s\n%s\n\n", index, temp->entity, temp->answer);
+
+		// Insert node to linked list
+		if (head == NULL) {
+			*listPtr = temp;
+		}
+		else {
+			head->next = temp;
+		}
+
+		count++;
+		ini_key += strlen(ini_key) + 1;
+	}
+	return count;
 }
 
 

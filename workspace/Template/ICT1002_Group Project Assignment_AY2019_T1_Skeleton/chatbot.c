@@ -43,6 +43,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "chat1002.h"
+#include <Windows.h>
  
  
 /*
@@ -175,15 +176,24 @@ int chatbot_do_load(int inc, char *inv[], char *response, int n) {
 	
 	/* to be implemented */
 	int loadedlist;
-	char filename[255];
-	strcpy(filename, inv[1]);
-	FILE *f = fopen(filename, "r");
-	if (f == NULL) {
-		printf("Could not open %s file\n", filename);
-		return 1;
+	char filename[MAX_PATH];
+	char curr_dir[MAX_PATH];
+
+	if (inc > 1) {
+		strcpy(filename, inv[1]);					// Get file name
+		GetCurrentDirectory(MAX_PATH, curr_dir);	// Get current directory
+		strcat(curr_dir, "\\");						// Add backslash to end of cwd
+		LPCSTR ini = strcat(curr_dir, filename);	// Get full path of ini file
+
+		loadedlist = knowledge_read(ini);
+		snprintf(response, n, "Read %d responses from %s.", loadedlist, filename);
 	}
-	loadedlist = knowledge_read(f);
-	snprintf(response, n, "Read %d responses from %s.", loadedlist, filename);
+	else {
+		printf("File not specified\n");
+		return 0;
+	}
+	
+	
 	return 0;
 	 
 }

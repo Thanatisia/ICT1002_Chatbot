@@ -9,6 +9,7 @@
 #define _CHAT1002_H
 
 #include <stdio.h>
+#include "Windows.h"
 
 /* the maximum number of characters we expect in a line of input (including the terminating null)  */
 #define MAX_INPUT    256
@@ -21,6 +22,12 @@
 
 /* the maximum number of characters allowed in a response (including the terminating null) */
 #define MAX_RESPONSE 256
+
+/* the maximum number of characters allowed in a file path (including the terminating null) */
+#define MAX_PATH 256
+
+/* the maximum number of characters allowed for all the keys in a section for the ini file */
+#define MAX_KEYS 2000
 
 /* return codes for knowledge_get() and knowledge_put() */
 #define KB_OK        0
@@ -53,7 +60,9 @@ int chatbot_do_smalltalk(int inc, char *inv[], char *resonse, int n);
 int knowledge_get(const char *intent, const char *entity, char *response, int n);
 int knowledge_put(const char *intent, const char *entity, const char *response);
 void knowledge_reset();
-int knowledge_read(FILE *f);
+int knowledge_read(LPCSTR ini);
+int read_section (char *section, LPCSTR ini);
 void knowledge_write(FILE *f);
+
 
 #endif
