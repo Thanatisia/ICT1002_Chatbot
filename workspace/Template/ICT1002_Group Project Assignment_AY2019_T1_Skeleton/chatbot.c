@@ -385,12 +385,13 @@ int chatbot_do_save(int inc, char *inv[], char *response, int n) {
  *  1, if the intent is the first word of one of the smalltalk phrases
  *  0, otherwise
  */
-int chatbot_is_smalltalk(const char *intent) {
-	
+int chatbot_is_smalltalk(const char* intent)
+{
+
 	/* to be implemented */
-	//return compare_token(intent, "exit") == 0 || compare_token(intent, "quit") == 0;
-	//return 0; //return 0 when intent is "who", "what", "where", "save", "load", "reset". 
-	return compare_token(intent, "hi") == 0 || compare_token(intent, "hello") == 0 || compare_token(intent, "how") == 0 || compare_token(intent, "yo") == 0;
+	return (compare_token(intent, "hi") == 0 || compare_token(intent, "hello") == 0 || compare_token(intent, "good") == 0 || compare_token(intent, "morning") == 0 || compare_token(intent, "afternoon") == 0 || compare_token(intent, "evening") == 0 || compare_token(intent, "night") == 0);
+	//return 0;
+
 }
 
 
@@ -404,18 +405,65 @@ int chatbot_is_smalltalk(const char *intent) {
  *   0, if the chatbot should continue chatting
  *   1, if the chatbot should stop chatting (e.g. the smalltalk was "goodbye" etc.)
  */
-int chatbot_do_smalltalk(int inc, char *inv[], char *response, int n) {
-	
-	/* to be implemented */
-	if (compare_token(inv[0], "hi") == 0)
-		snprintf(response, n, "Hi");
-	else if (compare_token(inv[0], "hello") == 0)
-		snprintf(response, n, "Hello");
-	else if (compare_token(inv[0], "how") == 0 && compare_token(inv[1], "are") == 0 && compare_token(inv[2], "you") == 0)
-		snprintf(response, n, "I am good :)");
-	else if (compare_token(inv[0], "yo") == 0)
-		snprintf(response, n, "WhatsUP");
+int chatbot_do_smalltalk(int inc, char* inv[], char* response, int n)
+{
+	// few standard response for the bot to use
+	char* stResponse[] = { "Good Morning! Need Anything?", "Good Afternoon! Need Anything?", "Good Evening! Need Anything?", "Hi! Need Anything?","I am robot , sleep is for the weak!" };
+	char* typeDay[] = { "Good", "Morning", "Afternoon", "Evening", "Night" }; // for conditional statement later
+	if (compare_token(inv[0], typeDay[0]) == 0 && inv[1] != NULL) // Check first word if it is good and if there is a second word behind
+	{
+		if (compare_token(inv[1], typeDay[1]) == 0)  // if morning then reply 
+		{
+			snprintf(response, n, "%s", stResponse[0]);
+		}
+		else if (compare_token(inv[1], typeDay[2]) == 0) // if afternoon then reply
+		{
+			snprintf(response, n, "%s", stResponse[1]);
+		}
+		else if (compare_token(inv[1], typeDay[3]) == 0) // if evening then reply
+		{
+			snprintf(response, n, "%s", stResponse[2]);
+		}
+		else if (compare_token(inv[1], typeDay[4]) == 0) // if night then reply
+		{
+			snprintf(response, n, "%s", stResponse[4]);
+		}
+		else // if first word is good but second word is not in the typeDay[] 
+		{
+			snprintf(response, n, "What do you mean?");
+		}
+	}
+	else if ((compare_token(inv[0], typeDay[1]) == 0 || compare_token(inv[0], typeDay[2]) == 0 || compare_token(inv[0], typeDay[3]) == 0 || compare_token(inv[0], typeDay[4]) == 0) && inv[1] == NULL) // check if the first word is in the typeDay and there is no second word behind. For example user type morning only
+	{
+		if (compare_token(inv[0], typeDay[1]) == 0)  // if morning then reply
+		{
+			snprintf(response, n, "%s", stResponse[0]);
+		}
+		else if (compare_token(inv[0], typeDay[2]) == 0) //if afternoon then reply
+		{
+			snprintf(response, n, "%s", stResponse[1]);
+		}
+		else if (compare_token(inv[0], typeDay[3]) == 0) // if evening then reply
+		{
+			snprintf(response, n, "%s", stResponse[2]);
+		}
+		else if (compare_token(inv[0], typeDay[4]) == 0) // if night then reply
+		{
+			snprintf(response, n, "%s", stResponse[4]);
+		}
+	}
+	else if (compare_token(inv[0], typeDay[0]) == 0) // if the word is only good
+	{
+		snprintf(response, n, "I'm a robot, how can I not be good.");
+	}
+	else
+	{
+		// if the word is Hi / Hello 
+		snprintf(response, n, "%s", stResponse[3]);
+	}
 	return 0;
-	
+
+
 }
+
   
