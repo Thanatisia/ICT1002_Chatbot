@@ -192,10 +192,7 @@ int chatbot_do_load(int inc, char *inv[], char *response, int n) {
 		printf("File not specified\n");
 		return 0;
 	}
-	
-	
 	return 0;
-	 
 }
 
 
@@ -335,8 +332,6 @@ int chatbot_do_reset(int inc, char *inv[], char *response, int n) {
  */
 int chatbot_is_save(const char *intent) {
 	
-	/* to be implemented */
-	
 	return compare_token(intent, "save") == 0;
 	
 }
@@ -353,22 +348,22 @@ int chatbot_is_save(const char *intent) {
  */
 int chatbot_do_save(int inc, char *inv[], char *response, int n) {
 	
-	/* to be implemented */
-	char filename[255];
-	if(compare_token(inv[1], "as") == 0) {//if the inv[1] is "as"
-		printf("Running inv[1] is \"as\"\n");
-		strcpy(filename, inv[2]);
+	char filename[MAX_PATH];
+	char curr_dir[MAX_PATH];
+
+	if (inc > 1) {
+		strcpy(filename, inv[1]);					// Get file name
+		GetCurrentDirectory(MAX_PATH, curr_dir);	// Get current directory
+		strcat(curr_dir, "\\");						// Add backslash to end of cwd
+		LPCSTR ini = strcat(curr_dir, filename);	// Get full path of ini file
+
+		knowledge_write(ini);
+		snprintf(response, n, "My knowledge has been saved to %s.", filename);
 	}
-	else
-		strcpy(filename, inv[1]);
-	FILE *f = fopen(filename, "w");
-	if (f == NULL) {
-		printf("Could not open %s file\n", filename);
-		return 1;
+	else {
+		printf("File not specified\n");
+		return 0;
 	}
-	knowledge_write(f);
-	fclose(f);
-	snprintf(response, n, "My knowledge has been saved to %s.", filename);
 	
 	return 0;
 }

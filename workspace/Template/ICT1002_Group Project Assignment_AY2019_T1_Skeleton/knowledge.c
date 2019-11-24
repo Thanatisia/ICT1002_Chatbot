@@ -39,7 +39,7 @@ typedef struct node {
 	struct node *next;
 }NODE, *NODEptr;
 
-NODEptr who[27] = {}, what[27]= {}, where[27] = {}, head, temp; // 26 different alphabets + nonalpha characters
+NODEptr who[NODE_SIZE] = {}, what[NODE_SIZE]= {}, where[NODE_SIZE] = {}, head, temp;
 
 int knowledge_get(const char *intent, const char *entity, char *response, int n) {
 	
@@ -52,10 +52,10 @@ int knowledge_get(const char *intent, const char *entity, char *response, int n)
 
 	int index;
 	if (!isalpha(entity[0])) {
-		index = 26;
+		index = NODE_SIZE - 1;
 	}
 	else {
-		int index = tolower(entity[0]) % 'a'; //to find the first letter of entity in the head pointer array
+		index = tolower(entity[0]) % 'a'; //to find the first letter of entity in the head pointer array
 	}
 	
 	printf("index is: %d\n", index);
@@ -120,10 +120,11 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
 
 	int index;
 	if (!isalpha(entity[0])) {
-		index = 26;
+		index = NODE_SIZE - 1;
 	}
 	else {
-		int index = tolower(entity[0]) % 'a'; //to find the first letter of entity in the head pointer array
+		printf("%d, %d", tolower(entity[0]), 'a');
+		index = tolower(entity[0]) % 'a'; //to find the first letter of entity in the head pointer array
 	}
 
 	char test[2] = "";
@@ -287,10 +288,10 @@ int read_section (char *section, LPCSTR ini) {
 		// Set the head to the correct linked list
 		int index;
 		if (!isalpha(ini_key[0])) {
-			index = 26;
+			index = NODE_SIZE - 1;
 		}
 		else {
-			int index = tolower(ini_key[0]) % 'a'; 
+			index = tolower(ini_key[0]) % 'a'; 
 		}
 
 		if (section == "what") {
@@ -344,7 +345,7 @@ int read_section (char *section, LPCSTR ini) {
 void knowledge_reset() {
 	
 	/* to be implemented */
-	for (int i = 0; i<26; i++){ // looping through the array of head pointers
+	for (int i = 0; i<NODE_SIZE; i++){ // looping through the array of head pointers
 		if(who[i] != NULL){
 			head = who[i];
 			while(head){
@@ -392,9 +393,26 @@ void knowledge_reset() {
  * Input:
  *   f - the file
  */
-void knowledge_write(FILE *f) {
-	
-	/* to be implemented */
-	
-	
+void knowledge_write(LPCSTR ini) {
+	write_section("what", ini);
+	write_section("who", ini);
+	write_section("where", ini);
+}
+
+void write_section (char *section, LPCSTR ini) {
+	for (int i = 0; i < NODE_SIZE; ++i) {
+		if (section == "what") {
+			head = what[i];
+		}
+		else if (section == "who") {
+			head = who[i];
+		}
+		else {
+			head = where[i];
+		}
+		while (head != NULL) {
+			WritePrivateProfileStringA(section, head->entity, head->answer, ini);
+			head = head->next;
+		}
+	}
 }
