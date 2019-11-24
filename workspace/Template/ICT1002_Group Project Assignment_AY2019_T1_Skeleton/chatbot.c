@@ -158,7 +158,7 @@ int chatbot_is_load(const char *intent) {
 	
 	/* to be implemented */
 	
-	return compare_token(intent, "load") == 0;
+	return (compare_token(intent, "load") == 0 || compare_token(intent, "read") == 0);
 	
 }
 
@@ -180,7 +180,19 @@ int chatbot_do_load(int inc, char *inv[], char *response, int n) {
 	char curr_dir[MAX_PATH];
 
 	if (inc > 1) {
-		strcpy(filename, inv[1]);					// Get file name
+		if (compare_token(inv[1], "from") == 0) {
+			strcpy(filename, inv[2]);				// Get file name
+		}
+		else {
+			strcpy(filename, inv[1]);				// Get file name
+		}
+		FILE *f = fopen(filename, "r");				// Check if file exists
+		if (f == NULL) {
+			snprintf(response, n, "File not found.");
+			fclose(f);	
+			return 0;
+		}
+		fclose(f);									// Close file
 		GetCurrentDirectory(MAX_PATH, curr_dir);	// Get current directory
 		strcat(curr_dir, "\\");						// Add backslash to end of cwd
 		LPCSTR ini = strcat(curr_dir, filename);	// Get full path of ini file
@@ -189,13 +201,10 @@ int chatbot_do_load(int inc, char *inv[], char *response, int n) {
 		snprintf(response, n, "Read %d responses from %s.", loadedlist, filename);
 	}
 	else {
-		printf("File not specified\n");
+		snprintf(response, n, "File not specified.");
 		return 0;
 	}
-	
-	
 	return 0;
-	 
 }
 
 
@@ -335,9 +344,7 @@ int chatbot_do_reset(int inc, char *inv[], char *response, int n) {
  */
 int chatbot_is_save(const char *intent) {
 	
-	/* to be implemented */
-	
-	return compare_token(intent, "save") == 0;
+	return (compare_token(intent, "save") == 0 || compare_token(intent, "write") == 0);
 	
 }
 
@@ -353,22 +360,30 @@ int chatbot_is_save(const char *intent) {
  */
 int chatbot_do_save(int inc, char *inv[], char *response, int n) {
 	
-	/* to be implemented */
-	char filename[255];
-	if(compare_token(inv[1], "as") == 0) {//if the inv[1] is "as"
-		printf("Running inv[1] is \"as\"\n");
-		strcpy(filename, inv[2]);
+	char filename[MAX_PATH];
+	char curr_dir[MAX_PATH];
+
+	if (inc > 1) {
+		if (compare_token(inv[1], "as") == 0 || compare_token(inv[1], "to") == 0 ) {
+			strcpy(filename, inv[2]);				// Get file name
+		}
+		else {
+			strcpy(filename, inv[1]);				// Get file name
+		}
+							
+		FILE *f = fopen(filename, "a");				// Create file if file does not exist
+		fclose(f);									// Close file
+		GetCurrentDirectory(MAX_PATH, curr_dir);	// Get current directory
+		strcat(curr_dir, "\\");						// Add backslash to end of cwd
+		LPCSTR ini = strcat(curr_dir, filename);	// Get full path of ini file
+
+		knowledge_write(ini);
+		snprintf(response, n, "My knowledge has been saved to %s.", filename);
 	}
-	else
-		strcpy(filename, inv[1]);
-	FILE *f = fopen(filename, "w");
-	if (f == NULL) {
-		printf("Could not open %s file\n", filename);
-		return 1;
+	else {
+		snprintf(response, n, "File not specified.");
+		return 0;
 	}
-	knowledge_write(f);
-	fclose(f);
-	snprintf(response, n, "My knowledge has been saved to %s.", filename);
 	
 	return 0;
 }

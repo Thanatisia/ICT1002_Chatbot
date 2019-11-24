@@ -30,6 +30,9 @@
 /* the maximum number of characters allowed for all the keys in a section for the ini file */
 #define MAX_KEYS 2000
 
+ /* size of each intent node array (26 alphabets + nonalpha characters) */
+#define NODE_SIZE 27
+
 /* return codes for knowledge_get() and knowledge_put() */
 #define KB_OK        0
 #define KB_NOTFOUND -1
@@ -63,7 +66,8 @@ int knowledge_put(const char *intent, const char *entity, const char *response);
 void knowledge_reset();
 int knowledge_read(LPCSTR ini);
 int read_section (char *section, LPCSTR ini);
-void knowledge_write(FILE *f);
+void knowledge_write(LPCSTR ini);
+void write_section (char *section, LPCSTR ini);
 
 
 #endif
