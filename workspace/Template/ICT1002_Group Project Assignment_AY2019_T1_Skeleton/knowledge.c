@@ -103,7 +103,7 @@ int knowledge_get(const char *intent, const char *entity, char *response, int n)
 		while(temp){
 			printf("checking temp entity: %s\n", temp->entity);
 
-			if (stristr(entity,temp->entity) != NULL){
+			if (stristr(entity,temp->entity) != NULL || stristr(temp->entity,entity) != NULL){
 				snprintf(response, n, temp->answer);
 				return KB_OK;
 			}
