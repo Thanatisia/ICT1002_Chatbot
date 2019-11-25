@@ -42,7 +42,7 @@ typedef struct node {
 
 NODEptr who[NODE_SIZE] = {}, what[NODE_SIZE]= {}, where[NODE_SIZE] = {}, head, temp;
 
-int knowledge_get(int inc, const char *intent, const char *entity[], char *response, int n) {
+int knowledge_get(int inc, const char *intent, char *entity[], char *response, int n) {
 	printf("running knowledge_get, intent is: %s\n", intent);
 
 	char strEntity[MAX_ENTITY] = "";

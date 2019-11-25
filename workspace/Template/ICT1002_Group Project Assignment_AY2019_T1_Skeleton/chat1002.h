@@ -59,7 +59,7 @@ int chatbot_is_smalltalk(const char *intent);
 int chatbot_do_smalltalk(int inc, char *inv[], char *resonse, int n);
 
 /* functions defined in knowledge.c */
-int knowledge_get(int inc, const char *intent, const char *entity[], char *response, int n);
+int knowledge_get(int inc, const char *intent, char *entity[], char *response, int n);
 int knowledge_put(const char *intent, const char *entity, const char *response);
 void knowledge_reset();
 int knowledge_read(LPCSTR ini);
