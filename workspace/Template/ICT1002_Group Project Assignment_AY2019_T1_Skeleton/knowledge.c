@@ -43,15 +43,21 @@ typedef struct node {
 NODEptr who[NODE_SIZE] = {}, what[NODE_SIZE]= {}, where[NODE_SIZE] = {}, head, temp;
 
 int knowledge_get(int inc, const char *intent, const char *entity[], char *response, int n) {
-	
-	/* to be implemented */
 	printf("running knowledge_get, intent is: %s\n", intent);
 
+	char strEntity[MAX_ENTITY] = "";
+	for (int i = 0; i < inc; ++i) {
+		strcat(strEntity,entity[i]);
+		if (i<inc-1) {
+			strcat(strEntity," ");
+		}
+	}
+
 	//if user ask for date/time
-	if (stristr(entity,"time")  != NULL || stristr(entity,"date")  != NULL) {
+	if (stristr(strEntity,"time")  != NULL || stristr(strEntity,"date")  != NULL) {
 		time_t t = time(NULL);
 		struct tm tm = *localtime(&t);
-		if (stristr(entity,"time")  != NULL) {
+		if (stristr(strEntity,"time")  != NULL) {
 			snprintf(response, n, "The time now is %02d:%02d\n",tm.tm_hour, tm.tm_min);
 		}
 		else {
