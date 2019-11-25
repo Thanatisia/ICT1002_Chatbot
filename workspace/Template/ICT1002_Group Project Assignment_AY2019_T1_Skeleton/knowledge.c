@@ -58,10 +58,10 @@ int knowledge_get(int inc, const char *intent, char *entity[], char *response, i
 		time_t t = time(NULL);
 		struct tm tm = *localtime(&t);
 		if (stristr(strEntity,"time")  != NULL) {
-			snprintf(response, n, "The time now is %02d:%02d\n",tm.tm_hour, tm.tm_min);
+			snprintf(response, n, "The time now is %02d:%02d",tm.tm_hour, tm.tm_min);
 		}
 		else {
-			snprintf(response, n, "The date is %d-%02d-%02d\n", tm.tm_year + 1900, tm.tm_mon + 1,tm.tm_mday);
+			snprintf(response, n, "The date is %d-%02d-%02d", tm.tm_year + 1900, tm.tm_mon + 1,tm.tm_mday);
 		}
 		return KB_OK;
 	}
