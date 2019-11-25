@@ -48,6 +48,7 @@ int knowledge_get(const char *intent, const char *entity, char *response, int n)
 	printf("running knowledge_get, intent is: %s\n", intent);
 	printf("entity is: %s\n", entity);
 
+	//if user ask for date/time
 	if (strstr(entity,"time")  != NULL || strstr(entity,"date")  != NULL) {
 		time_t t = time(NULL);
 		struct tm tm = *localtime(&t);
@@ -60,6 +61,11 @@ int knowledge_get(const char *intent, const char *entity, char *response, int n)
 		return KB_OK;
 	}
 	
+	//if user ask for chatbot's name
+	if (strstr(entity,"you")  != NULL || strstr(entity,"your name")  != NULL) {
+		snprintf(response, n, "I am %s", chatbot_botname());
+		return KB_OK;
+	}
 	
 	//if answer is found in the linkedlist then return KB_OK (0)
 	int intentflag;
