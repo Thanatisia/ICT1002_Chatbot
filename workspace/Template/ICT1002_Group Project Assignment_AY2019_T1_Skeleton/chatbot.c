@@ -243,10 +243,11 @@ int chatbot_is_question(const char *intent) {
  *   0 (the chatbot always continues chatting after a question)
  */
 int chatbot_do_question(int inc, char *inv[], char *response, int n) {
-	char entity[MAX_ENTITY] = "";
+	char* entity[MAX_ENTITY];
 	char reply[MAX_RESPONSE] = "I dont know. ";
 	char userinput[MAX_RESPONSE] = "";
 	int result = 0, result2 = -2; 	//result is for knowledge_get while result2 is for knowledge_put
+	int entity_inc = 0;
 
 	for (int i=1; i<inc; ++i) {
 		int ignore = 0;
@@ -257,15 +258,12 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 			}
 		}
 		if (ignore == 0) {
-			if (i<inc-1){
-				strncat(entity, inv[i], strlen(inv[i]));
-				strcat(entity, " ");
-			}
-			else
-				strncat(entity, inv[i], strlen(inv[i]));
+			entity[entity_inc] = (char*) malloc(strlen(inv[i])*sizeof(char)); 
+			strcpy(entity[entity_inc],inv[i]);
+			entity_inc++;
 		}
 	}
-	result = knowledge_get(inv[0], entity, response, n);
+	result = knowledge_get(entity_inc, inv[0], entity, response, n);
 	
 	printf("result is: %d\n", result);
 	

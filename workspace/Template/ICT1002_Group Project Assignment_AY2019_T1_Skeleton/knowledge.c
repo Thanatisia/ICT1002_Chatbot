@@ -42,7 +42,7 @@ typedef struct node {
 
 NODEptr who[NODE_SIZE] = {}, what[NODE_SIZE]= {}, where[NODE_SIZE] = {}, head, temp;
 
-int knowledge_get(const char *intent, const char *entity, char *response, int n) {
+int knowledge_get(int inc, const char *intent, const char *entity[], char *response, int n) {
 	
 	/* to be implemented */
 	printf("running knowledge_get, intent is: %s\n", intent);
@@ -68,51 +68,51 @@ int knowledge_get(const char *intent, const char *entity, char *response, int n)
 	
 	//if answer is found in the linkedlist then return KB_OK (0)
 	int intentflag;
+	int index[inc];
 
-	int index;
-	if (!isalpha(entity[0])) {
-		index = NODE_SIZE - 1;
-	}
-	else {
-		index = tolower(entity[0]) % 'a'; //to find the first letter of entity in the head pointer array
-	}
-	
-	printf("index is: %d\n", index);
-	if (compare_token(intent, "who") == 0){
-		intentflag = 0;
-		head = who[index];
-		printf("Using who array\n");
-	}
-	else if (compare_token(intent, "what") == 0){
-		intentflag = 1;
-		head = what[index];
-	}
-	else if (compare_token(intent, "where") == 0){
-		intentflag = 2;
-		head = where[index];
-	}
-	else
-		return KB_INVALID; // When intent is neither "who", "what" or "where"
-	
-	//checking if the entity is inside one of the linkedlist
-	printf("checking for the loops\n");
-	
-	if(head != NULL){
-		temp = head;
-		while(temp){
-			printf("checking temp entity: %s\n", temp->entity);
-
-			if (stristr(entity,temp->entity) != NULL || stristr(temp->entity,entity) != NULL){
-				snprintf(response, n, temp->answer);
-				return KB_OK;
+	for (int i = 0; i < inc; ++i) {
+		if (!isalpha(entity[i][0])) {
+			index[i] = NODE_SIZE - 1;
+		}
+		else {
+			index[i] = tolower(entity[i][0]) % 'a'; //to find the first letter of entity in the head pointer array
+		}
+		
+		printf("index[i] is: %d\n", index[i]);
+		if (compare_token(intent, "who") == 0){
+			intentflag = 0;
+			head = who[index[i]];
+			printf("Using who array\n");
+		}
+		else if (compare_token(intent, "what") == 0){
+			intentflag = 1;
+			head = what[index[i]];
+		}
+		else if (compare_token(intent, "where") == 0){
+			intentflag = 2;
+			head = where[index[i]];
+		}
+		else
+			return KB_INVALID; // When intent is neither "who", "what" or "where"
+		
+		//checking if the entity is inside one of the linkedlist
+		printf("checking for the loops\n");
+		
+		if(head != NULL){
+			temp = head;
+			while(temp){
+				printf("checking temp entity: %s\n", temp->entity);
+				printf("checking temp entity: %s\n", entity[i]);
+				if (stristr(entity[i],temp->entity) != 0 || stristr(temp->entity,entity[i]) != 0){
+					snprintf(response, n, temp->answer);
+					return KB_OK;
+				}
+				temp = temp->next;
 			}
-			temp = temp->next;
 		}
 	}
-	
-	
+
 	//else answer not found for intent and entity pair then return KB_NOTFOUND (-1)
-	
 	return KB_NOTFOUND;
 	
 }
