@@ -69,6 +69,7 @@ int knowledge_read(LPCSTR ini);
 int read_section (char *section, LPCSTR ini);
 void knowledge_write(LPCSTR ini);
 void write_section (char *section, LPCSTR ini);
-
+void toLowerStr(char *str);
+char* stristr( const char* str1, const char* str2 );
 
 #endif

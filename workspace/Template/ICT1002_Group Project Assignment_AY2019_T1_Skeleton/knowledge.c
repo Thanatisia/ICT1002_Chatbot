@@ -49,10 +49,10 @@ int knowledge_get(const char *intent, const char *entity, char *response, int n)
 	printf("entity is: %s\n", entity);
 
 	//if user ask for date/time
-	if (strstr(entity,"time")  != NULL || strstr(entity,"date")  != NULL) {
+	if (stristr(entity,"time")  != NULL || stristr(entity,"date")  != NULL) {
 		time_t t = time(NULL);
 		struct tm tm = *localtime(&t);
-		if (strstr(entity,"time")  != NULL) {
+		if (stristr(entity,"time")  != NULL) {
 			snprintf(response, n, "The time now is %02d:%02d\n",tm.tm_hour, tm.tm_min);
 		}
 		else {
@@ -62,7 +62,7 @@ int knowledge_get(const char *intent, const char *entity, char *response, int n)
 	}
 	
 	//if user ask for chatbot's name
-	if (strstr(entity,"you")  != NULL || strstr(entity,"your name")  != NULL) {
+	if (stristr(entity,"you")  != NULL || stristr(entity,"your name")  != NULL) {
 		snprintf(response, n, "I am %s", chatbot_botname());
 		return KB_OK;
 	}
@@ -102,7 +102,8 @@ int knowledge_get(const char *intent, const char *entity, char *response, int n)
 		temp = head;
 		while(temp){
 			printf("checking temp entity: %s\n", temp->entity);
-			if (compare_token(temp->entity, entity) == 0){
+
+			if (stristr(entity,temp->entity) != NULL){
 				snprintf(response, n, temp->answer);
 				return KB_OK;
 			}
@@ -435,4 +436,52 @@ void write_section (char *section, LPCSTR ini) {
 			head = head->next;
 		}
 	}
+}
+
+void toLowerStr(char *str)
+{
+    for (int i = 0; i < strlen(str); ++i)
+        str[i] = tolower(str[i]);
+}
+
+char* stristr( const char* str1, const char* str2 )
+{
+    const char* p1 = str1 ;
+    const char* p2 = str2 ;
+    const char* r = *p2 == 0 ? str1 : 0 ;
+
+    while( *p1 != 0 && *p2 != 0 )
+    {
+        if( tolower( (unsigned char)*p1 ) == tolower( (unsigned char)*p2 ) )
+        {
+            if( r == 0 )
+            {
+                r = p1 ;
+            }
+
+            p2++ ;
+        }
+        else
+        {
+            p2 = str2 ;
+            if( r != 0 )
+            {
+                p1 = r + 1 ;
+            }
+
+            if( tolower( (unsigned char)*p1 ) == tolower( (unsigned char)*p2 ) )
+            {
+                r = p1 ;
+                p2++ ;
+            }
+            else
+            {
+                r = 0 ;
+            }
+        }
+
+        p1++ ;
+    }
+
+    return *p2 == 0 ? (char*)r : 0 ;
 }
