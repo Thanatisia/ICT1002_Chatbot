@@ -182,8 +182,8 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
 		return KB_INVALID;
 	
 	NODEptr newknowledge = (NODEptr)malloc(sizeof(NODE));
-	newknowledge->answer = (char *)malloc(sizeof(char)*strlen(response));
-	newknowledge->entity = (char *)malloc(sizeof(char)*strlen(entity));
+	newknowledge->answer = (char *)malloc(sizeof(char)*strlen(response)+1);
+	newknowledge->entity = (char *)malloc(sizeof(char)*strlen(entity)+1);
 	if (newknowledge == NULL)//  || newknowledge->response == NULL || newknowledge->entity == NULL
 		return KB_NOMEM; // return -3 when cannot allocate any memory for node
 	

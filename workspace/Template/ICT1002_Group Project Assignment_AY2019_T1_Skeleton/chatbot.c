@@ -258,7 +258,7 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 			}
 		}
 		if (ignore == 0) {
-			entity[entity_inc] = (char*) malloc(strlen(inv[i])*sizeof(char)); 
+			entity[entity_inc] = (char*) malloc(strlen(inv[i])*sizeof(char)+1); 
 			strcpy(entity[entity_inc],inv[i]);
 			entity_inc++;
 		}
@@ -295,12 +295,12 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 			snprintf(response, n, ":-(");
 	}
 	
-	// for (int i =entity_inc; i>0; i--){
-	// 	if (entity[i] != NULL){
-	// 		printf("Freeing entity malloc\n");
-	// 		free(entity[i]);
-	// 	}
-	// }
+	for (int i = 0; i < entity_inc; ++i) {
+		if (entity[i] != NULL){
+			printf("Freeing entity malloc\n");
+			free(entity[i]);
+		}
+	}
 	
 	return 0;
 	 
