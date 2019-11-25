@@ -25,8 +25,6 @@
 /* the maximum number of characters allowed in a response (including the terminating null) */
 #define MAX_RESPONSE 256
 
-/* the maximum number of characters allowed in a file path (including the terminating null) */
-
 /* the maximum number of characters allowed for all the keys in a section for the ini file */
 #define MAX_KEYS 2000
 
