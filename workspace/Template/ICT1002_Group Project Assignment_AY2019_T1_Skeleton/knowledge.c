@@ -46,7 +46,6 @@ int knowledge_get(const char *intent, const char *entity, char *response, int n)
 	
 	/* to be implemented */
 	printf("running knowledge_get, intent is: %s\n", intent);
-	printf("entity is: %s\n", entity);
 
 	//if user ask for date/time
 	if (stristr(entity,"time")  != NULL || stristr(entity,"date")  != NULL) {
@@ -167,7 +166,6 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
 	
 	if (compare_token(response, test) == 0) // if userinput is just enter then it will exit knowledge_put
 		return KB_INVALID;
-	printf("What user typed: %s vs what is inside test: %s-\n", response, test);
 	
 	NODEptr newknowledge = (NODEptr)malloc(sizeof(NODE));
 	newknowledge->answer = (char *)malloc(sizeof(char)*strlen(response));
@@ -232,12 +230,9 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
 			return KB_OK;
 		}
 		else{ // if there is only 1 node inside linkedlist
-			if (compare_token(head->entity, newknowledge->entity) != 0){ // when head entity is different from new node entity
-				newknowledge->next = NULL;
-				head->next = newknowledge;
-				return KB_OK;
-			}
-			else { // when head entity same as new node entity
+			printf("What is inside head node: %s %s\n", head->entity, head->answer);
+			if (compare_token(head->entity, newknowledge->entity) == 0){ // when head entity same as new node entity 
+				printf("New node same as old node!\n");
 				free(head->entity);
 				free(head->answer);
 				head = newknowledge;
@@ -252,10 +247,18 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
 					where[index] = head;
 				}
 				return KB_OK;
+				
+			}
+			else { // when head entity is different from new node entity
+				printf("New node different from old node!\n");
+				newknowledge->next = NULL;
+				head->next = newknowledge;
+				return KB_OK;
 			}
 		}
 	}
 	else{
+		printf("There is no head!\n");
 		newknowledge->next = NULL;
 		head = newknowledge;
 		if(intentflag == 0){
@@ -305,56 +308,30 @@ int read_section (char *section, LPCSTR ini) {
 	// Loop through all entities in current section
 	while (*ini_key) {
 		NODEptr* listPtr = NULL;
-
-		// Set the head to the correct linked list
-		int index;
-		if (!isalpha(ini_key[0])) {
-			index = NODE_SIZE - 1;
-		}
-		else {
-			index = tolower(ini_key[0]) % 'a'; 
-		}
-
-		if (section == "what") {
-			head = what[index];
-			listPtr = &what[index];
-		}
-		else if (section == "who") {
-			head = who[index];
-			listPtr = &who[index];
-		}
-		else {
-			head = where[index];
-			listPtr = &where[index];
-		}
-
-		// Traverse to end of linked list
-		while (head != NULL && head->next != NULL) {
-			head = head->next;
-		}
-
-		// Create new node to store data
-		temp = (NODEptr)malloc(sizeof(NODE));
-		temp->next = NULL;
-		temp->entity = (char*)malloc(sizeof(char) * strlen(ini_key));
-		strcpy(temp->entity, ini_key);
 		char temp_response[MAX_RESPONSE];
 		GetPrivateProfileString(section, ini_key, NULL, temp_response, MAX_RESPONSE, ini);
-		temp->answer = (char*)malloc(sizeof(char) * strlen(temp_response));
-		strcpy(temp->answer, temp_response);
+		int result = 0;
 
 		//printf("%d\n%s\n%s\n\n", index, temp->entity, temp->answer);
 
-		// Insert node to linked list
-		if (head == NULL) {
-			*listPtr = temp;
+		if (section == "what") {
+			result = knowledge_put("what", ini_key, temp_response);
 		}
-		else {
-			head->next = temp;
+		else if (section == "who"){ 
+			result = knowledge_put("who", ini_key, temp_response);
+		}else{
+			result = knowledge_put("where", ini_key, temp_response);
+		}
+		if (result == 0) {
+			count++;
+			ini_key += strlen(ini_key) + 1;
+		}
+		else{
+			printf("Error in file reading!");
+			return -1;
 		}
 
-		count++;
-		ini_key += strlen(ini_key) + 1;
+		printf("Current result is: %d\n", result);
 	}
 	return count;
 }
