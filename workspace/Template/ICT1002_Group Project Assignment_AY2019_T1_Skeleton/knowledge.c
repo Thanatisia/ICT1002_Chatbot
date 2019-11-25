@@ -176,6 +176,7 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
 	// populate the newknowledge
 	strcpy(newknowledge->entity, entity);
 	strcpy(newknowledge->answer, response);
+	newknowledge->next = NULL;
 	
 	printf("What is inside new node: %s %s\n", newknowledge->entity, newknowledge->answer);
 	
@@ -187,13 +188,11 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
 				if (compare_token(temp->entity, newknowledge->entity) == 0){ // old node has the same entity as the new node (applies to 2nd node only)
 					free(temp->entity);
 					free(temp->answer);
-					newknowledge->next = NULL;
 					head->next = newknowledge;
 					return KB_OK;
 				}
 				else if (temp->next == NULL){ // when the node next to temp is empty
 					temp->next = newknowledge;
-					newknowledge->next = NULL;
 					return KB_OK;
 				}
 				else if(compare_token(temp->next->entity, newknowledge->entity) == 0){ // when the next node of temp is the same as new node
@@ -205,7 +204,6 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
 						return KB_OK;
 					}
 					else{ // When temp->next->next is NULL
-						newknowledge->next = NULL;
 						free(temp->next->entity);
 						free(temp->next->answer);
 						temp->next = newknowledge;
@@ -252,7 +250,6 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
 			}
 			else { // when head entity is different from new node entity
 				printf("New node different from old node!\n");
-				newknowledge->next = NULL;
 				head->next = newknowledge;
 				return KB_OK;
 			}
@@ -260,7 +257,6 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
 	}
 	else{
 		printf("There is no head!\n");
-		newknowledge->next = NULL;
 		head = newknowledge;
 		if(intentflag == 0){
 			who[index] = head;
