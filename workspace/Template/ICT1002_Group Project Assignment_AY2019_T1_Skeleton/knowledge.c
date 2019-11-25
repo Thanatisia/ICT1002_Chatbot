@@ -235,6 +235,7 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
 				printf("New node same as old node!\n");
 				free(head->entity);
 				free(head->answer);
+				free(head);
 				head = newknowledge;
 				if(intentflag == 0){
 					who[index] = head;
@@ -351,29 +352,26 @@ void knowledge_reset() {
 				head = head->next;
 				free(temp->entity);
 				free(temp->answer);
-				free(temp->next);
 				free(temp);
 			}
 		}
 		if(what[i] != NULL){
-			head = who[i];
+			head = what[i];
 			while(head){
 				temp = head;
 				head = head->next;
 				free(temp->entity);
 				free(temp->answer);
-				free(temp->next);
 				free(temp);
 			}
 		}
 		if(where[i] != NULL){
-			head = who[i];
+			head = where[i];
 			while(head){
 				temp = head;
 				head = head->next;
 				free(temp->entity);
 				free(temp->answer);
-				free(temp->next);
 				free(temp);
 			}
 		}
