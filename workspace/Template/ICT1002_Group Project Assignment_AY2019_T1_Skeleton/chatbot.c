@@ -295,6 +295,12 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 			snprintf(response, n, ":-(");
 	}
 	
+	for (int i =entity_inc; i>0; i--){
+		if (entity[i] != NULL){
+			printf("Freeing entity malloc\n");
+			free(entity[i]);
+		}
+	}
 	
 	return 0;
 	 
