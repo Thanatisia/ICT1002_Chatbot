@@ -67,7 +67,7 @@ int knowledge_get(int inc, const char *intent, const char *entity[], char *respo
 	}
 	
 	//if user ask for chatbot's name
-	if (stristr(entity,"you")  != NULL || stristr(entity,"your name")  != NULL) {
+	if (stristr(strEntity,"you")  != NULL || stristr(strEntity,"your name")  != NULL) {
 		snprintf(response, n, "I am %s", chatbot_botname());
 		return KB_OK;
 	}

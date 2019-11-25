@@ -279,7 +279,16 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 		strcat(reply, "?");
 		printf("Going to prompt user for answer\nPlease press enter is you do not want to put into knowledge.\n");
 		prompt_user(response, n, reply);
-		result2 = knowledge_put(inv[0], entity, response); // check if user answer is inside knowledge
+
+		char strEntity[MAX_ENTITY] = "";
+		for (int i = 0; i < entity_inc; ++i) {
+			strcat(strEntity,entity[i]);
+			if (i<entity_inc-1) {
+				strcat(strEntity," ");
+			}
+		}
+
+		result2 = knowledge_put(inv[0], strEntity, response); // check if user answer is inside knowledge
 		if (result2 == 0)
 			snprintf(response, n, "Thank you.");
 		else if (result2 == -2)
