@@ -257,8 +257,12 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 			}
 		}
 		if (ignore == 0) {
-			strncat(entity, inv[i], strlen(inv[i]));
-			strcat(entity, " ");
+			if (i<inc-1){
+				strncat(entity, inv[i], strlen(inv[i]));
+				strcat(entity, " ");
+			}
+			else
+				strncat(entity, inv[i], strlen(inv[i]));
 		}
 	}
 	result = knowledge_get(inv[0], entity, response, n);
