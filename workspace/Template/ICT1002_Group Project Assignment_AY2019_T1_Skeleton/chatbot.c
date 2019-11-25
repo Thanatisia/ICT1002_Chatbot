@@ -44,8 +44,10 @@
 #include <string.h>
 #include "chat1002.h"
 #include <Windows.h>
- 
- 
+
+
+char *ignoreWords[] = {"is", "are", "the", "it", "at", "on"};
+
 /*
  * Get the name of the chatbot.
  *
@@ -241,31 +243,25 @@ int chatbot_is_question(const char *intent) {
  *   0 (the chatbot always continues chatting after a question)
  */
 int chatbot_do_question(int inc, char *inv[], char *response, int n) {
-	
-	/* to be implemented */
 	char entity[MAX_ENTITY] = "";
 	char reply[MAX_RESPONSE] = "I dont know. ";
 	char userinput[MAX_RESPONSE] = "";
-	int result = 0, result2 = -2; //result is for knowledge_get while result2 is for knowledge_put
-	if (compare_token(inv[1], "are") == 0 || compare_token(inv[1], "is") == 0) {//if the inv[1] is "is" or "are"
-		printf("running inv[1] is either 'is' or 'are'\n");
-		for (int i = 2; i<inc; i++){ //to get entity without the intent and "is" or "are"
-			strncat(entity, inv[i], strlen(inv[i])); //in case there is a single character in entity
-			if (i<inc-1)
-				strcat(entity, " "); //add spaces between words unless it is the last word
+	int result = 0, result2 = -2; 	//result is for knowledge_get while result2 is for knowledge_put
+
+	for (int i=1; i<inc; ++i) {
+		int ignore = 0;
+		for (int j=0; j<sizeof(ignoreWords)/sizeof(ignoreWords[0]); ++j) {
+			if (compare_token(inv[i],ignoreWords[j]) == 0) {
+				ignore = 1;
+				break;
+			}
 		}
-		result = knowledge_get(inv[0], entity, response, n);
-		
-	}
-	else {//If the inv[1] is neither "is" or "are"
-		printf("running inv[1] is neither 'is' nor 'are'\n");
-		for (int i = 1; i<inc; i++){ // to get entity without the intent
-			strncat(entity, inv[i], strlen(inv[i])); //in case there is a single character in entity
-			if (i<inc-1)
-				strcat(entity, " "); //add spaces between words unless it is the last word
+		if (ignore == 0) {
+			strncat(entity, inv[i], strlen(inv[i]));
+			strcat(entity, " ");
 		}
-		result = knowledge_get(inv[0], entity, response, n);
 	}
+	result = knowledge_get(inv[0], entity, response, n);
 	
 	printf("result is: %d\n", result);
 	
