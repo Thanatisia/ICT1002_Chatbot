@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include "Windows.h"
 #include "ctype.h"
+#include <time.h>
 
 /* the maximum number of characters we expect in a line of input (including the terminating null)  */
 #define MAX_INPUT    256

@@ -16,6 +16,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <Windows.h>
+#include <time.h>
 #include "chat1002.h"
 
 /*
@@ -46,6 +47,19 @@ int knowledge_get(const char *intent, const char *entity, char *response, int n)
 	/* to be implemented */
 	printf("running knowledge_get, intent is: %s\n", intent);
 	printf("entity is: %s\n", entity);
+
+	if (strstr(entity,"time")  != NULL || strstr(entity,"date")  != NULL) {
+		time_t t = time(NULL);
+		struct tm tm = *localtime(&t);
+		if (strstr(entity,"time")  != NULL) {
+			snprintf(response, n, "The time now is %02d:%02d\n",tm.tm_hour, tm.tm_min);
+		}
+		else {
+			snprintf(response, n, "The date is %d-%02d-%02d\n", tm.tm_year + 1900, tm.tm_mon + 1,tm.tm_mday);
+		}
+		return KB_OK;
+	}
+	
 	
 	//if answer is found in the linkedlist then return KB_OK (0)
 	int intentflag;
