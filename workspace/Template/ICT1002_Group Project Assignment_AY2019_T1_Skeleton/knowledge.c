@@ -75,6 +75,7 @@ int knowledge_get(int inc, const char *intent, char *entity[], char *response, i
 	//if answer is found in the linkedlist then return KB_OK (0)
 	int intentflag;
 	int index[inc];
+	char* latest = NULL;
 
 	for (int i = 0; i < inc; ++i) {
 		if (!isalpha(entity[i][0])) {
@@ -103,24 +104,31 @@ int knowledge_get(int inc, const char *intent, char *entity[], char *response, i
 		
 		//checking if the entity is inside one of the linkedlist
 		printf("checking for the loops\n");
-		
 		if(head != NULL){
 			temp = head;
 			while(temp){
 				printf("checking temp entity: %s\n", temp->entity);
 				printf("checking temp entity: %s\n", entity[i]);
-				if (stristr(entity[i],temp->entity) != 0 || stristr(temp->entity,entity[i]) != 0){
+				if (compare_token(strEntity,temp->entity) == 0) {
 					snprintf(response, n, temp->answer);
 					return KB_OK;
 				}
+				else if (stristr(entity[i],temp->entity) != 0 || stristr(temp->entity,entity[i]) != 0){
+					latest = temp->answer;
+				}
 				temp = temp->next;
 			}
+
+			if (latest != NULL) {
+				snprintf(response, n, latest);
+				return KB_OK;
+			}
+			
 		}
 	}
 
 	//else answer not found for intent and entity pair then return KB_NOTFOUND (-1)
 	return KB_NOTFOUND;
-	
 }
 
 
