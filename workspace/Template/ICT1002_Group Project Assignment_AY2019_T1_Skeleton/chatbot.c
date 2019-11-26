@@ -279,6 +279,7 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 		strcat(reply, "?");
 		printf("Going to prompt user for answer\nPlease press enter is you do not want to put into knowledge.\n");
 		prompt_user(response, n, reply);
+		
 
 		char strEntity[MAX_ENTITY] = "";
 		for (int i = 0; i < entity_inc; ++i) {
@@ -415,10 +416,13 @@ int chatbot_do_save(int inc, char *inv[], char *response, int n) {
  */
 int chatbot_is_smalltalk(const char* intent)
 {
-
-	/* to be implemented */
-	return (compare_token(intent, "hi") == 0 || compare_token(intent, "hello") == 0 || compare_token(intent, "good") == 0 || compare_token(intent, "morning") == 0 || compare_token(intent, "afternoon") == 0 || compare_token(intent, "evening") == 0 || compare_token(intent, "night") == 0);
-	//return 0;
+	char* greeting[]= {"Hi","hello","Whatsupp","Good"};
+	int num = sizeof(greeting) / sizeof(greeting[0]);
+	for(int i=0;i < num;i++){
+		if(compare_token(intent,greeting[i])==0)
+			return 1;
+	}
+	return 0;
 
 }
 
@@ -436,62 +440,89 @@ int chatbot_is_smalltalk(const char* intent)
 int chatbot_do_smalltalk(int inc, char* inv[], char* response, int n)
 {
 	// few standard response for the bot to use
-	char* stResponse[] = { "Good Morning! Need Anything?", "Good Afternoon! Need Anything?", "Good Evening! Need Anything?", "Hi! Need Anything?","I am robot , sleep is for the weak!" };
-	char* typeDay[] = { "Good", "Morning", "Afternoon", "Evening", "Night" }; // for conditional statement later
+	char* stResponse[] = { "Good Morning! Need Anything?", "Good Afternoon! Need Anything?", "Good Evening! Need Anything?", "I am robot , sleep is for the weak!" };
+	char* typeDay[] = { "Good", "Morning", "Afternoon", "Evening", "Night" };// for conditional statement later
+
+	char* greetingResponse[]={"Hi","Hello","What's up","Heyyo"};
+	int greetingRespSize= sizeof(greetingResponse) / sizeof(greetingResponse[0]);
+
+	time_t rawtime;
+    struct tm *current_time;
+    time(&rawtime);
+    current_time = localtime(&rawtime);
+
 	if (compare_token(inv[0], typeDay[0]) == 0 && inv[1] != NULL) // Check first word if it is good and if there is a second word behind
 	{
-		if (compare_token(inv[1], typeDay[1]) == 0)  // if morning then reply 
+		if (compare_token(inv[1], typeDay[1]) == 0)// if morning then reply 
 		{
-			snprintf(response, n, "%s", stResponse[0]);
-		}
-		else if (compare_token(inv[1], typeDay[2]) == 0) // if afternoon then reply
-		{
-			snprintf(response, n, "%s", stResponse[1]);
+
+			if(current_time->tm_hour>=12 && current_time->tm_hour<18) // user input is morning but is afternoon
+				snprintf(response, n, "It is currently afternoon. %s",stResponse[1]);
+
+			else if(current_time->tm_hour>=18 && current_time->tm_hour<21) // user input is morning but is evening
+				snprintf(response, n, "It is currently evening. %s",stResponse[2]);
+
+			else if(current_time->tm_hour>=21 || current_time->tm_hour<6) // user input is morning but is night
+				snprintf(response, n, "It is currently night. %s",stResponse[3]);
+
+			else
+				snprintf(response, n, "%s",stResponse[0]);
+				
+		}	
+
+		else if (compare_token(inv[1], typeDay[2]) == 0)// if afternoon then reply
+		{ 
+			if(current_time->tm_hour>=6 && current_time->tm_hour<12) // user input is afternoon but is morning
+				snprintf(response, n, "It is currently morning. %s",stResponse[0]);
+
+			else if(current_time->tm_hour>=18 && current_time->tm_hour<21) //user input is afternoon but is evening
+				snprintf(response, n, "It is currently evening. %s",stResponse[2]);
+
+			else if(current_time->tm_hour>=21 || current_time->tm_hour<6) //user input is afternoon but is night
+				snprintf(response, n, "It is currently night. %s",stResponse[3]);
+
+			else
+				snprintf(response, n, "%s",stResponse[1]);
 		}
 		else if (compare_token(inv[1], typeDay[3]) == 0) // if evening then reply
 		{
-			snprintf(response, n, "%s", stResponse[2]);
+			if(current_time->tm_hour>=6 && current_time->tm_hour<12) //user input is evening but is morning
+				snprintf(response, n, "It is currently afternoon. %s",stResponse[0]);
+
+			if(current_time->tm_hour>=12 && current_time->tm_hour<18) //user input is evening but is afternoon
+				snprintf(response, n, "It is currently afternoon. %s",stResponse[1]);
+
+			else if(current_time->tm_hour>=21 || current_time->tm_hour<6) //user input is evening but is night
+				snprintf(response, n, "It is currently night. %s",stResponse[3]);
+
+			else
+				snprintf(response, n, "%s",stResponse[2]);
 		}
-		else if (compare_token(inv[1], typeDay[4]) == 0) // if night then reply
+		else if (compare_token(inv[1], typeDay[4]) == 0)// if night then reply
 		{
-			snprintf(response, n, "%s", stResponse[4]);
+			if(current_time->tm_hour>=6 && current_time->tm_hour<12) //user input is night but is morning
+				snprintf(response, n, "It is currently afternoon. %s",stResponse[0]);
+
+			if(current_time->tm_hour>=12 && current_time->tm_hour<18) //user input is evening but is afternoon
+				snprintf(response, n, "It is currently afternoon. %s",stResponse[1]);
+
+			else if(current_time->tm_hour>=18 || current_time->tm_hour<21) //user input is evening but is evening
+				snprintf(response, n, "It is currently night. %s",stResponse[2]);
+
+			else
+				snprintf(response, n, "%s",stResponse[3]);
 		}
 		else // if first word is good but second word is not in the typeDay[] 
-		{
 			snprintf(response, n, "What do you mean?");
-		}
-	}
-	else if ((compare_token(inv[0], typeDay[1]) == 0 || compare_token(inv[0], typeDay[2]) == 0 || compare_token(inv[0], typeDay[3]) == 0 || compare_token(inv[0], typeDay[4]) == 0) && inv[1] == NULL) // check if the first word is in the typeDay and there is no second word behind. For example user type morning only
-	{
-		if (compare_token(inv[0], typeDay[1]) == 0)  // if morning then reply
-		{
-			snprintf(response, n, "%s", stResponse[0]);
-		}
-		else if (compare_token(inv[0], typeDay[2]) == 0) //if afternoon then reply
-		{
-			snprintf(response, n, "%s", stResponse[1]);
-		}
-		else if (compare_token(inv[0], typeDay[3]) == 0) // if evening then reply
-		{
-			snprintf(response, n, "%s", stResponse[2]);
-		}
-		else if (compare_token(inv[0], typeDay[4]) == 0) // if night then reply
-		{
-			snprintf(response, n, "%s", stResponse[4]);
-		}
 	}
 	else if (compare_token(inv[0], typeDay[0]) == 0) // if the word is only good
-	{
 		snprintf(response, n, "I'm a robot, how can I not be good.");
-	}
+
 	else
 	{
-		// if the word is Hi / Hello 
-		snprintf(response, n, "%s", stResponse[3]);
+		snprintf(response, n, "%s", greetingResponse[rand()%greetingRespSize]); // sending a random response from a list of greeting responses
 	}
 	return 0;
 
 
 }
-
-  
