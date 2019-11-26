@@ -12,11 +12,6 @@
  * You may add helper functions as necessary.
  */
  
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <Windows.h>
-#include <time.h>
 #include "chat1002.h"
 
 /*
