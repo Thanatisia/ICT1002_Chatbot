@@ -9,9 +9,13 @@
 #define _CHAT1002_H
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdarg.h>
+#include <time.h>
 #include "Windows.h"
 #include "ctype.h"
-#include <time.h>
+
 
 /* the maximum number of characters we expect in a line of input (including the terminating null)  */
 #define MAX_INPUT    256
