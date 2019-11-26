@@ -40,11 +40,7 @@
  * returned by these functions at the start of each line.
  */
  
-#include <stdio.h>
-#include <string.h>
 #include "chat1002.h"
-#include <Windows.h>
-
 
 char *ignoreWords[] = {"is", "are", "the", "it", "at", "on"};
 
