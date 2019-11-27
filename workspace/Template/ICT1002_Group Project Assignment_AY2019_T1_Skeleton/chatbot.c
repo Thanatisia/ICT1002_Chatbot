@@ -263,20 +263,20 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 	
 	//printf("result is: %d\n", result);
 	
-	if (result == -2)
+	if (result == KB_INVALID)
 		snprintf(response, n, "Error in intent");
-	else if (result == -1 || result == -3){ //get answer from user
+	else if (result == KB_NOTFOUND || result == KB_FUZZY){ //get answer from user
 		for (int i = 0; i<inc; i++){ // to get everything in inv
 			strncat(userinput, inv[i], strlen(inv[i])); //in case there is a single character in response
 			if(i<inc-1)
 				strcat(userinput, " "); //add spaces between words unless it is the last word
 		}
-		if (result == -1) {
+		if (result == KB_NOTFOUND) {
 			strcpy(reply, "I don't know. ");
 			strcat(reply, userinput); //reply will have "I don't know" plus user response
 			strcat(reply, "?");
 		}
-		else {
+		else if (result == KB_FUZZY){
 			strcpy(reply, "Found a similar question. Is this correct?");
 		}
 		strcat(reply, "\nGoing to prompt user for answer\nPlease press enter is you do not want to put into knowledge.");
@@ -293,9 +293,9 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 		}
 
 		result2 = knowledge_put(inv[0], strEntity, response); // check if user answer is inside knowledge
-		if (result2 == 0)
+		if (result2 == KB_OK)
 			snprintf(response, n, "Thank you.");
-		else if (result2 == -2)
+		else if (result2 == KB_INVALID)
 			snprintf(response, n, ":-(");
 	}
 	

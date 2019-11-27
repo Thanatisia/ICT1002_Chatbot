@@ -124,7 +124,7 @@ int knowledge_get(int inc, const char *intent, char *entity[], char *response, i
 			if (latest != NULL) {
 				//snprintf(response, n, latest);
 				printf("%s: %s\n",chatbot_botname(), latest);
-				return -3;
+				return KB_FUZZY;
 			}
 			
 		}

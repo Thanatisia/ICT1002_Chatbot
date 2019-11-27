@@ -40,6 +40,7 @@
 #define KB_NOTFOUND -1
 #define KB_INVALID  -2
 #define KB_NOMEM    -3
+#define KB_FUZZY    -4
  
 /* functions defined in main.c */
 int compare_token(const char *token1, const char *token2);
