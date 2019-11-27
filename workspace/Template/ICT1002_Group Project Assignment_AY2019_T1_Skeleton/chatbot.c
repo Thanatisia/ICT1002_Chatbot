@@ -43,7 +43,7 @@
 #include "chat1002.h"
 
 // Array of words to be ignored when parsing question
-char *ignoreWords[] = {"is", "are", "the", "it", "at", "on"};
+char *ignoreWords[] = {"\0", "is", "are", "the", "it", "at", "on"};
 
 /*
  * Get the name of the chatbot.
@@ -267,8 +267,7 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 			entity_inc++;
 		}
 	}
-
-	if (entity_inc <= 1) {
+	if (entity_inc == 0) {
 		snprintf(response, n, "What do you mean?");
 		return 0;
 	}
