@@ -187,6 +187,22 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
 	//do the checking
 	if (head != NULL){ // check if the head is empty
 		if (head->next != NULL){ // check if the node after head is empty
+			if (compare_token(head->entity, newknowledge->entity) == 0){ // old node has the same entity as the new node (applies to 2nd node only)
+				free(head->entity);
+				free(head->answer);
+				free(head);
+				head = newknowledge;
+				if(intentflag == 0){
+					who[index] = head;
+				}
+				else if (intentflag == 1){
+					what[index] = head;
+				}
+				else if (intentflag == 2){
+					where[index] = head;
+				}
+					return KB_OK;
+				}
 			temp = head->next;
 			while(temp != NULL){ // To check if there is any node in the linkedlist having the same entity as new node
 				if (compare_token(temp->entity, newknowledge->entity) == 0){ // old node has the same entity as the new node (applies to 2nd node only)
