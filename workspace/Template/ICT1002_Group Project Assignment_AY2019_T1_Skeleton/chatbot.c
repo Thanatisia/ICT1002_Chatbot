@@ -135,7 +135,8 @@ int chatbot_is_exit(const char *intent) {
  *   0 (the chatbot always continues chatting after a question)
  */
 int chatbot_do_exit(int inc, char *inv[], char *response, int n) {
-	 
+	
+	knowledge_reset();
 	snprintf(response, n, "Goodbye!");
 	 
 	return 1;
