@@ -412,6 +412,10 @@ int chatbot_do_save(int inc, char *inv[], char *response, int n) {
  */
 int chatbot_is_smalltalk(const char* intent)
 {
+	if (stristr(intent, "It") != 0) {
+		return 1;
+	}
+
 	char* greeting[]= {"Hi","hello","Whatsupp","Good"};
 	int num = sizeof(greeting) / sizeof(greeting[0]);
 	for(int i=0;i < num;i++){
@@ -419,9 +423,7 @@ int chatbot_is_smalltalk(const char* intent)
 			return 1;
 	}
 	return 0;
-
 }
-
 
 /*
  * Respond to smalltalk.
@@ -447,7 +449,10 @@ int chatbot_do_smalltalk(int inc, char* inv[], char* response, int n)
     time(&rawtime);
     current_time = localtime(&rawtime);
 
-	if (compare_token(inv[0], typeDay[0]) == 0 && inv[1] != NULL) // Check first word if it is good and if there is a second word behind
+	if (stristr(inv[0],"It") != 0) {
+		snprintf(response, n, "Indeed it is.");
+	}
+	else if (compare_token(inv[0], typeDay[0]) == 0 && inv[1] != NULL) // Check first word if it is good and if there is a second word behind
 	{
 		if (compare_token(inv[1], typeDay[1]) == 0)// if morning then reply 
 		{
