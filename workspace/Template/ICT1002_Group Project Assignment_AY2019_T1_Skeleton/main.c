@@ -34,7 +34,6 @@ int main(int argc, char *argv[]) {
 	
 	/* main command loop */
 	do {
-	
 		do {
 			/* read the line */
 			printf("%s: ", chatbot_username());
@@ -97,7 +96,6 @@ int compare_token(const char *token1, const char *token2) {
 		return -1;
 	else
 		return 1;
-	
 }
 
 

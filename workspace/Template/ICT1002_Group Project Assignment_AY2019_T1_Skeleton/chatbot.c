@@ -261,7 +261,7 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 	}
 	result = knowledge_get(entity_inc, inv[0], entity, response, n);
 	
-	printf("result is: %d\n", result);
+	//printf("result is: %d\n", result);
 	
 	if (result == -2)
 		snprintf(response, n, "Error in intent");
@@ -294,7 +294,7 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 	
 	for (int i = 0; i < entity_inc; ++i) {
 		if (entity[i] != NULL){
-			printf("Freeing entity malloc\n");
+			//printf("Freeing entity malloc\n");
 			free(entity[i]);
 		}
 	}
