@@ -49,6 +49,7 @@ int knowledge_get(int inc, const char *intent, char *entity[], char *response, i
 	}
 
 	//if user ask for date/time
+
 	if (stristr(strEntity,"time")  != NULL || stristr(strEntity,"date")  != NULL) {
 		time_t t = time(NULL);
 		struct tm tm = *localtime(&t);
@@ -121,8 +122,9 @@ int knowledge_get(int inc, const char *intent, char *entity[], char *response, i
 			}
 
 			if (latest != NULL) {
-				snprintf(response, n, latest);
-				return KB_OK;
+				//snprintf(response, n, latest);
+				printf("%s: %s\n",chatbot_botname(), latest);
+				return -3;
 			}
 			
 		}
@@ -339,11 +341,8 @@ int read_section (char *section, LPCSTR ini) {
 			ini_key += strlen(ini_key) + 1;
 		}
 		else{
-			//printf("Error in file reading!");
 			return -1;
 		}
-
-		//printf("Current result is: %d\n", result);
 	}
 	return count;
 }

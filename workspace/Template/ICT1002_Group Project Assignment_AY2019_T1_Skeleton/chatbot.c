@@ -265,15 +265,22 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 	
 	if (result == -2)
 		snprintf(response, n, "Error in intent");
-	else if (result == -1){ //get answer from user
+	else if (result == -1 || result == -3){ //get answer from user
 		for (int i = 0; i<inc; i++){ // to get everything in inv
 			strncat(userinput, inv[i], strlen(inv[i])); //in case there is a single character in response
 			if(i<inc-1)
 				strcat(userinput, " "); //add spaces between words unless it is the last word
 		}
-		strcat(reply, userinput); //reply will have "I don't know" plus user response
-		strcat(reply, "?");
-		printf("Going to prompt user for answer\nPlease press enter is you do not want to put into knowledge.\n");
+		if (result == -1) {
+			strcpy(reply, "I don't know. ");
+			strcat(reply, userinput); //reply will have "I don't know" plus user response
+			strcat(reply, "?");
+		}
+		else {
+			strcpy(reply, "Found a similar question. Is this correct?");
+		}
+		strcat(reply, "\nGoing to prompt user for answer\nPlease press enter is you do not want to put into knowledge.");
+		//printf("Going to prompt user for answer\nPlease press enter is you do not want to put into knowledge.\n");
 		prompt_user(response, n, reply);
 		
 
