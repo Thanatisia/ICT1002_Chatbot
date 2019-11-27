@@ -38,8 +38,8 @@ typedef struct node {
 NODEptr who[NODE_SIZE] = {}, what[NODE_SIZE]= {}, where[NODE_SIZE] = {}, head, temp;
 
 int knowledge_get(int inc, const char *intent, char *entity[], char *response, int n) {
-	//printf("running knowledge_get, intent is: %s\n", intent);
 
+	// Store the entity in a string
 	char strEntity[MAX_ENTITY] = "";
 	for (int i = 0; i < inc; ++i) {
 		strcat(strEntity,entity[i]);
@@ -48,8 +48,7 @@ int knowledge_get(int inc, const char *intent, char *entity[], char *response, i
 		}
 	}
 
-	//if user ask for date/time
-
+	// Respond to date/time query
 	if (stristr(strEntity,"time")  != NULL || stristr(strEntity,"date")  != NULL) {
 		time_t t = time(NULL);
 		struct tm tm = *localtime(&t);
@@ -62,7 +61,7 @@ int knowledge_get(int inc, const char *intent, char *entity[], char *response, i
 		return KB_OK;
 	}
 	
-	//if user ask for chatbot's name
+	// Respond to name query
 	if (stristr(strEntity,"you")  != NULL || stristr(strEntity,"your name")  != NULL) {
 		if (compare_token(intent, "where") == 0) {
 			snprintf(response, n, "I over am here.");
@@ -73,9 +72,7 @@ int knowledge_get(int inc, const char *intent, char *entity[], char *response, i
 		
 		return KB_OK;
 	}
-	
-	//if answer is found in the linkedlist then return KB_OK (0)
-	int intentflag;
+
 	int index[inc];
 	char* latest = NULL;
 
@@ -87,42 +84,36 @@ int knowledge_get(int inc, const char *intent, char *entity[], char *response, i
 			index[i] = tolower(entity[i][0]) % 'a'; //to find the first letter of entity in the head pointer array
 		}
 		
-		//printf("index[i] is: %d\n", index[i]);
 		if (compare_token(intent, "who") == 0){
-			intentflag = 0;
 			head = who[index[i]];
-			//printf("Using who array\n");
 		}
 		else if (compare_token(intent, "what") == 0){
-			intentflag = 1;
 			head = what[index[i]];
 		}
 		else if (compare_token(intent, "where") == 0){
-			intentflag = 2;
 			head = where[index[i]];
 		}
 		else
 			return KB_INVALID; // When intent is neither "who", "what" or "where"
 		
 		//checking if the entity is inside one of the linkedlist
-		//printf("checking for the loops\n");
 		if(head != NULL){
 			temp = head;
 			while(temp){
-				//printf("checking temp entity: %s\n", temp->entity);
-				//printf("checking temp entity: %s\n", entity[i]);
+				// Check for exact match
 				if (compare_token(strEntity,temp->entity) == 0) {
 					snprintf(response, n, temp->answer);
 					return KB_OK;
 				}
+				// Fuzzy search
 				else if (stristr(entity[i],temp->entity) != 0 || stristr(temp->entity,entity[i]) != 0){
 					latest = temp->answer;
 				}
 				temp = temp->next;
 			}
 
+			// return KB_FUZZY if search is found, but isn't exact
 			if (latest != NULL) {
-				//snprintf(response, n, latest);
 				printf("%s: %s\n",chatbot_botname(), latest);
 				return KB_FUZZY;
 			}
@@ -149,6 +140,7 @@ int knowledge_get(int inc, const char *intent, char *entity[], char *response, i
  *   KB_FOUND, if successful
  *   KB_NOMEM, if there was a memory allocation failure
  *   KB_INVALID, if the intent is not a valid question word
+ *   KB_FUZZY, if non-exact match is found
  */
 int knowledge_put(const char *intent, const char *entity, const char *response) {
 	
@@ -310,6 +302,13 @@ int knowledge_read(LPCSTR ini) {
 	return count;
 }
 
+/*
+ * Read data from ini file and store into knowledge base
+ * 
+ * Input:
+ *   section - the section to be read
+ *   ini - location of the ini file
+ */
 int read_section (char *section, LPCSTR ini) {
 	int count = 0;
 
@@ -326,8 +325,7 @@ int read_section (char *section, LPCSTR ini) {
 		GetPrivateProfileString(section, ini_key, NULL, temp_response, MAX_RESPONSE, ini);
 		int result = 0;
 
-		//printf("%d\n%s\n%s\n\n", index, temp->entity, temp->answer);
-
+		// Store data into knowledge base
 		if (section == "what") {
 			result = knowledge_put("what", ini_key, temp_response);
 		}
@@ -405,6 +403,13 @@ void knowledge_write(LPCSTR ini) {
 	write_section("where", ini);
 }
 
+/*
+ * Save knowledge base to ini file
+ * 
+ * Input:
+ *   section - the section to be written to
+ *   ini - location of the ini file
+ */
 void write_section (char *section, LPCSTR ini) {
 	for (int i = 0; i < NODE_SIZE; ++i) {
 		if (section == "what") {
@@ -423,12 +428,26 @@ void write_section (char *section, LPCSTR ini) {
 	}
 }
 
+/*
+ * String implementation of tolower() function
+ * 
+ * Input:
+ *   str - pointer to the string
+ */
 void toLowerStr(char *str)
 {
     for (int i = 0; i < strlen(str); ++i)
         str[i] = tolower(str[i]);
 }
 
+/*
+ * Case in-sensitive implementation of strstr()
+ * 
+ * Input:
+ *   str1 - pointer to the string
+ *   str2 - pointer to the substring
+ * Returns: pointer to the location of substring in string
+ */
 char* stristr( const char* str1, const char* str2 )
 {
     const char* p1 = str1 ;
