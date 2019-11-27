@@ -186,54 +186,12 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
 	
 	//do the checking
 	if (head != NULL){ // check if the head is empty
-		if (head->next != NULL){ // check if the node after head is empty
-			if (compare_token(head->entity, newknowledge->entity) == 0){ // old node has the same entity as the new node (applies to 2nd node only)
-				free(head->entity);
-				free(head->answer);
-				free(head);
-				head = newknowledge;
-				if(intentflag == 0){
-					who[index] = head;
-				}
-				else if (intentflag == 1){
-					what[index] = head;
-				}
-				else if (intentflag == 2){
-					where[index] = head;
-				}
-					return KB_OK;
-				}
-			temp = head->next;
-			while(temp != NULL){ // To check if there is any node in the linkedlist having the same entity as new node
-				if (compare_token(temp->entity, newknowledge->entity) == 0){ // old node has the same entity as the new node (applies to 2nd node only)
-					free(temp->entity);
-					free(temp->answer);
-					head->next = newknowledge;
-					return KB_OK;
-				}
-				else if (temp->next == NULL){ // when the node next to temp is empty
-					temp->next = newknowledge;
-					return KB_OK;
-				}
-				else if(compare_token(temp->next->entity, newknowledge->entity) == 0){ // when the next node of temp is the same as new node
-					if(temp->next->next != NULL){
-						newknowledge->next = temp->next->next;
-						free(temp->next->entity);
-						free(temp->next->answer);
-						temp->next = newknowledge;
-						return KB_OK;
-					}
-					else{ // When temp->next->next is NULL
-						free(temp->next->entity);
-						free(temp->next->answer);
-						temp->next = newknowledge;
-						return KB_OK;
-					}
-				}
-				temp = temp->next;
-			}
-			//if there is no node in the linkedlist having the same entity as new node
-			newknowledge->next = head;
+		temp = head;
+		if(compare_token(temp->entity, newknowledge->entity) == 0) { // check if new node same as head node
+			newknowledge->next = temp->next;
+			free(temp->entity);
+			free(temp->answer);
+			free(temp);
 			head = newknowledge;
 			if(intentflag == 0){
 				who[index] = head;
@@ -246,28 +204,26 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
 			}
 			return KB_OK;
 		}
-		else{ // if there is only 1 node inside linkedlist
-			if (compare_token(head->entity, newknowledge->entity) == 0){ // when head entity same as new node entity 
-				free(head->entity);
-				free(head->answer);
-				free(head);
-				head = newknowledge;
-				if(intentflag == 0){
-					who[index] = head;
-				}
-				else if (intentflag == 1){
-					what[index] = head;
-				}
-				else if (intentflag == 2){
-					where[index] = head;
-				}
-				return KB_OK;
-				
-			}
-			else { // when head entity is different from new node entity
-				head->next = newknowledge;
+		else{
+			if(temp->next == NULL){ // check if next node is empty
+				temp->next = newknowledge;
 				return KB_OK;
 			}
+			else{
+				while(temp->next != NULL){ // keep checking for next node
+					if(compare_token(temp->next->entity, newknowledge->entity) == 0){ //if they are the same as new node then will replace
+						temp->next = newknowledge;
+						free(temp->next->entity);
+						free(temp->next->answer);
+						free(temp->next);
+						return KB_OK;
+					}
+					temp = temp->next;
+				} //if there are no nodes same as new node, then it will just place new node at the end
+				temp->next = newknowledge;
+				return KB_OK;
+			}
+			
 		}
 	}
 	else{
