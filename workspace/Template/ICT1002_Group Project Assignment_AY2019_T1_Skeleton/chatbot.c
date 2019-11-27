@@ -42,6 +42,7 @@
  
 #include "chat1002.h"
 
+// Array of words to be ignored when parsing question
 char *ignoreWords[] = {"is", "are", "the", "it", "at", "on"};
 
 /*
@@ -152,12 +153,10 @@ int chatbot_do_exit(int inc, char *inv[], char *response, int n) {
  *  1, if the intent is "load"
  *  0, otherwise
  */
-int chatbot_is_load(const char *intent) {
-	
-	/* to be implemented */
-	
+int chatbot_is_load(const char *intent) {	
+
 	return (compare_token(intent, "load") == 0 || compare_token(intent, "read") == 0);
-	
+
 }
 
 
@@ -171,8 +170,6 @@ int chatbot_is_load(const char *intent) {
  *   0 (the chatbot always continues chatting after loading knowledge)
  */
 int chatbot_do_load(int inc, char *inv[], char *response, int n) {
-	
-	/* to be implemented */
 	int loadedlist;
 	char filename[MAX_PATH];
 	char curr_dir[MAX_PATH];
@@ -218,8 +215,6 @@ int chatbot_do_load(int inc, char *inv[], char *response, int n) {
  */
 int chatbot_is_question(const char *intent) {
 	
-	/* to be implemented */
-	
 	return compare_token(intent, "who") == 0 || compare_token(intent, "where") == 0 || compare_token(intent, "what") == 0;
 	
 }
@@ -261,8 +256,6 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 	}
 	result = knowledge_get(entity_inc, inv[0], entity, response, n);
 	
-	//printf("result is: %d\n", result);
-	
 	if (result == KB_INVALID)
 		snprintf(response, n, "Error in intent");
 	else if (result == KB_NOTFOUND || result == KB_FUZZY){ //get answer from user
@@ -280,7 +273,6 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 			strcpy(reply, "Found a similar question. Is this correct?");
 		}
 		strcat(reply, "\nGoing to prompt user for answer\nPlease press enter is you do not want to put into knowledge.");
-		//printf("Going to prompt user for answer\nPlease press enter is you do not want to put into knowledge.\n");
 		prompt_user(response, n, reply);
 		
 
@@ -301,7 +293,6 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 	
 	for (int i = 0; i < entity_inc; ++i) {
 		if (entity[i] != NULL){
-			//printf("Freeing entity malloc\n");
 			free(entity[i]);
 		}
 	}
@@ -323,8 +314,6 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
  */
 int chatbot_is_reset(const char *intent) {
 	
-	/* to be implemented */
-	
 	return compare_token(intent, "reset") == 0;
 	
 }
@@ -341,7 +330,6 @@ int chatbot_is_reset(const char *intent) {
  */
 int chatbot_do_reset(int inc, char *inv[], char *response, int n) {
 	
-	/* to be implemented */
 	knowledge_reset();
 	snprintf(response, n, "%s reset", chatbot_botname());
 	return 0;

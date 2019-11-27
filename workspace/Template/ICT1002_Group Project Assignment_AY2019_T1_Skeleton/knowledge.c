@@ -143,8 +143,7 @@ int knowledge_get(int inc, const char *intent, char *entity[], char *response, i
  *   KB_FUZZY, if non-exact match is found
  */
 int knowledge_put(const char *intent, const char *entity, const char *response) {
-	
-	/* to be implemented */
+
 	int intentflag;
 
 	int index;
@@ -152,12 +151,10 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
 		index = NODE_SIZE - 1;
 	}
 	else {
-		//printf("%d, %d", tolower(entity[0]), 'a');
 		index = tolower(entity[0]) % 'a'; //to find the first letter of entity in the head pointer array
 	}
 
 	char test[2] = "";
-	//printf("running knowledge_put\n");
 	if (compare_token(intent, "who") == 0){
 		intentflag = 0;
 		head = who[index];
@@ -179,15 +176,13 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
 	NODEptr newknowledge = (NODEptr)malloc(sizeof(NODE));
 	newknowledge->answer = (char *)malloc(sizeof(char)*strlen(response)+1);
 	newknowledge->entity = (char *)malloc(sizeof(char)*strlen(entity)+1);
-	if (newknowledge == NULL)//  || newknowledge->response == NULL || newknowledge->entity == NULL
+	if (newknowledge == NULL)
 		return KB_NOMEM; // return -3 when cannot allocate any memory for node
 	
 	// populate the newknowledge
 	strcpy(newknowledge->entity, entity);
 	strcpy(newknowledge->answer, response);
 	newknowledge->next = NULL;
-	
-	//printf("What is inside new node: %s %s\n", newknowledge->entity, newknowledge->answer);
 	
 	//do the checking
 	if (head != NULL){ // check if the head is empty
@@ -226,7 +221,6 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
 			head = newknowledge;
 			if(intentflag == 0){
 				who[index] = head;
-				//printf("Added to who array\n");
 			}
 			else if (intentflag == 1){
 				what[index] = head;
@@ -237,16 +231,13 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
 			return KB_OK;
 		}
 		else{ // if there is only 1 node inside linkedlist
-			//printf("What is inside head node: %s %s\n", head->entity, head->answer);
 			if (compare_token(head->entity, newknowledge->entity) == 0){ // when head entity same as new node entity 
-				//printf("New node same as old node!\n");
 				free(head->entity);
 				free(head->answer);
 				free(head);
 				head = newknowledge;
 				if(intentflag == 0){
 					who[index] = head;
-					//printf("Added to who array\n");
 				}
 				else if (intentflag == 1){
 					what[index] = head;
@@ -258,18 +249,15 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
 				
 			}
 			else { // when head entity is different from new node entity
-				//printf("New node different from old node!\n");
 				head->next = newknowledge;
 				return KB_OK;
 			}
 		}
 	}
 	else{
-		//printf("There is no head!\n");
 		head = newknowledge;
 		if(intentflag == 0){
 			who[index] = head;
-			//printf("Added to who array\n");
 		}
 		else if (intentflag == 1){
 			what[index] = head;
@@ -351,7 +339,6 @@ int read_section (char *section, LPCSTR ini) {
  */
 void knowledge_reset() {
 	
-	/* to be implemented */
 	for (int i = 0; i<NODE_SIZE; i++){ // looping through the array of head pointers
 		if(who[i] != NULL){
 			head = who[i];
