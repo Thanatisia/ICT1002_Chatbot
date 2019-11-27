@@ -267,6 +267,12 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 			entity_inc++;
 		}
 	}
+
+	if (entity_inc <= 1) {
+		snprintf(response, n, "What do you mean?");
+		return 0;
+	}
+
 	result = knowledge_get(entity_inc, inv[0], entity, response, n);
 	
 	if (result == KB_INVALID)
