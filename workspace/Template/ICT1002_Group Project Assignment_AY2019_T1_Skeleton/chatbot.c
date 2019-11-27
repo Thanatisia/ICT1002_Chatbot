@@ -447,20 +447,29 @@ int chatbot_do_smalltalk(int inc, char* inv[], char* response, int n)
 	int isGreeting = 0;
 	char currTypeDay[MAX_ENTITY];
 
-	for (int i = 0; i < 4; ++i) {
-		if (compare_token(inv[1],typeDay[i]) == 0) {
-			isGreeting = 1;
-			break;
-		}
-	}
-
-	if (isGreeting) {
-		getTypeDay(current_time->tm_hour,currTypeDay);
-		if (compare_token(inv[1],currTypeDay) == 0) {
-			snprintf(response, n, "Good %s! Need Anything?", currTypeDay);
+	if (compare_token(inv[0],"Good") == 0) {
+		if (inc == 1) {
+			snprintf(response, n, "Yes, I'm doing good.");
 		}
 		else {
-			snprintf(response, n, "It is currently %s. Good %s! Need Anything?", currTypeDay, currTypeDay);
+			for (int i = 0; i < 4; ++i) {
+				if (compare_token(inv[1],typeDay[i]) == 0) {
+					isGreeting = 1;
+					break;
+				}
+			}
+			if (isGreeting) {
+				getTypeDay(current_time->tm_hour,currTypeDay);
+				if (compare_token(inv[1],currTypeDay) == 0) {
+					snprintf(response, n, "Good %s! Need Anything?", currTypeDay);
+				}
+				else {
+					snprintf(response, n, "It is currently %s. Good %s! Need Anything?", currTypeDay, currTypeDay);
+				}
+			}
+			else {
+				snprintf(response, n, "What do you mean?");
+			}
 		}
 	}
 	else if (stristr(inv[0],"It") != 0) {
@@ -469,8 +478,8 @@ int chatbot_do_smalltalk(int inc, char* inv[], char* response, int n)
 	else {
 		snprintf(response, n, "%s", greetingResponse[rand()%greetingRespSize]); // sending a random response from a list of greeting responses
 	}
-	
-	
+
+
 	return 0;
 }
 
