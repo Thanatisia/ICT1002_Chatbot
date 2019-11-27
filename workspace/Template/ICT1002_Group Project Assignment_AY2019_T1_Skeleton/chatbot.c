@@ -280,12 +280,11 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 		if (result == KB_NOTFOUND) {
 			strcpy(reply, "I don't know. ");
 			strcat(reply, userinput); //reply will have "I don't know" plus user response
-			strcat(reply, "?");
+			strcat(reply, "? (Press enter to skip)");
 		}
 		else if (result == KB_FUZZY){
-			strcpy(reply, "Found a similar question. Is this correct?");
+			strcpy(reply, "Found a similar question. Press enter if it is correct, else input the correct response.");
 		}
-		strcat(reply, "\nGoing to prompt user for answer\nPlease press enter is you do not want to put into knowledge.");
 		prompt_user(response, n, reply);
 		
 
