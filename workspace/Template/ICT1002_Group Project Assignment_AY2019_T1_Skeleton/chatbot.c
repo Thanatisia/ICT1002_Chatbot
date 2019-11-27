@@ -434,8 +434,7 @@ int chatbot_is_smalltalk(const char* intent)
 int chatbot_do_smalltalk(int inc, char* inv[], char* response, int n)
 {
 	// few standard response for the bot to use
-	char* stResponse[] = { "Good Morning! Need Anything?", "Good Afternoon! Need Anything?", "Good Evening! Need Anything?", "I am robot , sleep is for the weak!" };
-	char* typeDay[] = { "Good", "Morning", "Afternoon", "Evening", "Night" };// for conditional statement later
+	char* typeDay[] = {"Morning", "Afternoon", "Evening", "Night" };// for conditional statement later
 
 	char* greetingResponse[]={"Hi","Hello","What's up","Heyyo"};
 	int greetingRespSize= sizeof(greetingResponse) / sizeof(greetingResponse[0]);
@@ -445,81 +444,55 @@ int chatbot_do_smalltalk(int inc, char* inv[], char* response, int n)
     time(&rawtime);
     current_time = localtime(&rawtime);
 
-	if (stristr(inv[0],"It") != 0) {
+	int isGreeting = 0;
+	char currTypeDay[MAX_ENTITY];
+
+	for (int i = 0; i < 4; ++i) {
+		if (compare_token(inv[1],typeDay[i]) == 0) {
+			isGreeting = 1;
+			break;
+		}
+	}
+
+	if (isGreeting) {
+		getTypeDay(current_time->tm_hour,currTypeDay);
+		if (compare_token(inv[1],currTypeDay) == 0) {
+			snprintf(response, n, "Good %s! Need Anything?", currTypeDay);
+		}
+		else {
+			snprintf(response, n, "It is currently %s. Good %s! Need Anything?", currTypeDay, currTypeDay);
+		}
+	}
+	else if (stristr(inv[0],"It") != 0) {
 		snprintf(response, n, "Indeed it is.");
 	}
-	else if (compare_token(inv[0], typeDay[0]) == 0 && inv[1] != NULL) // Check first word if it is good and if there is a second word behind
-	{
-		if (compare_token(inv[1], typeDay[1]) == 0)// if morning then reply 
-		{
-
-			if(current_time->tm_hour>=12 && current_time->tm_hour<18) // user input is morning but is afternoon
-				snprintf(response, n, "It is currently afternoon. %s",stResponse[1]);
-
-			else if(current_time->tm_hour>=18 && current_time->tm_hour<21) // user input is morning but is evening
-				snprintf(response, n, "It is currently evening. %s",stResponse[2]);
-
-			else if(current_time->tm_hour>=21 || current_time->tm_hour<6) // user input is morning but is night
-				snprintf(response, n, "It is currently night. %s",stResponse[3]);
-
-			else
-				snprintf(response, n, "%s",stResponse[0]);
-				
-		}	
-
-		else if (compare_token(inv[1], typeDay[2]) == 0)// if afternoon then reply
-		{ 
-			if(current_time->tm_hour>=6 && current_time->tm_hour<12) // user input is afternoon but is morning
-				snprintf(response, n, "It is currently morning. %s",stResponse[0]);
-
-			else if(current_time->tm_hour>=18 && current_time->tm_hour<21) //user input is afternoon but is evening
-				snprintf(response, n, "It is currently evening. %s",stResponse[2]);
-
-			else if(current_time->tm_hour>=21 || current_time->tm_hour<6) //user input is afternoon but is night
-				snprintf(response, n, "It is currently night. %s",stResponse[3]);
-
-			else
-				snprintf(response, n, "%s",stResponse[1]);
-		}
-		else if (compare_token(inv[1], typeDay[3]) == 0) // if evening then reply
-		{
-			if(current_time->tm_hour>=6 && current_time->tm_hour<12) //user input is evening but is morning
-				snprintf(response, n, "It is currently afternoon. %s",stResponse[0]);
-
-			if(current_time->tm_hour>=12 && current_time->tm_hour<18) //user input is evening but is afternoon
-				snprintf(response, n, "It is currently afternoon. %s",stResponse[1]);
-
-			else if(current_time->tm_hour>=21 || current_time->tm_hour<6) //user input is evening but is night
-				snprintf(response, n, "It is currently night. %s",stResponse[3]);
-
-			else
-				snprintf(response, n, "%s",stResponse[2]);
-		}
-		else if (compare_token(inv[1], typeDay[4]) == 0)// if night then reply
-		{
-			if(current_time->tm_hour>=6 && current_time->tm_hour<12) //user input is night but is morning
-				snprintf(response, n, "It is currently afternoon. %s",stResponse[0]);
-
-			if(current_time->tm_hour>=12 && current_time->tm_hour<18) //user input is evening but is afternoon
-				snprintf(response, n, "It is currently afternoon. %s",stResponse[1]);
-
-			else if(current_time->tm_hour>=18 || current_time->tm_hour<21) //user input is evening but is evening
-				snprintf(response, n, "It is currently night. %s",stResponse[2]);
-
-			else
-				snprintf(response, n, "%s",stResponse[3]);
-		}
-		else // if first word is good but second word is not in the typeDay[] 
-			snprintf(response, n, "What do you mean?");
-	}
-	else if (compare_token(inv[0], typeDay[0]) == 0) // if the word is only good
-		snprintf(response, n, "I'm a robot, how can I not be good.");
-
-	else
-	{
+	else {
 		snprintf(response, n, "%s", greetingResponse[rand()%greetingRespSize]); // sending a random response from a list of greeting responses
 	}
+	
+	
 	return 0;
+}
 
-
+/*
+ * Get the typeDay based on current time
+ *
+ * Input:
+ *  currentHour - the current time in hours
+ *  typeDay - pointer to a character array containing the typeDay
+ *
+ */
+void getTypeDay (int currentHour, char* typeDay) {
+	if (currentHour >= 5 && currentHour <= 11) {
+		strcpy(typeDay,"Morning");
+	}
+	else if (currentHour >= 12 && currentHour <= 16) {
+		strcpy(typeDay,"Afternoon");
+	}
+	else if (currentHour >= 17 && currentHour <= 20) {
+		strcpy(typeDay,"Evening");
+	}
+	else {
+		strcpy(typeDay,"Night");
+	}
 }

@@ -62,6 +62,7 @@ int chatbot_is_save(const char *intent);
 int chatbot_do_save(int inc, char *inv[], char *response, int n);
 int chatbot_is_smalltalk(const char *intent);
 int chatbot_do_smalltalk(int inc, char *inv[], char *resonse, int n);
+void getTypeDay (int currentHour, char* typeDay);
 
 /* functions defined in knowledge.c */
 int knowledge_get(int inc, const char *intent, char *entity[], char *response, int n);
