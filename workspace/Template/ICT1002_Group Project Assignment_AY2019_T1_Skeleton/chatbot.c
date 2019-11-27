@@ -90,8 +90,6 @@ int chatbot_main(int inc, char *inv[], char *response, int n) {
 	/* look for an intent and invoke the corresponding do_* function */
 	if (chatbot_is_exit(inv[0]))
 		return chatbot_do_exit(inc, inv, response, n);
-	else if (chatbot_is_smalltalk(inv[0]))
-		return chatbot_do_smalltalk(inc, inv, response, n);
 	else if (chatbot_is_load(inv[0]))
 		return chatbot_do_load(inc, inv, response, n);
 	else if (chatbot_is_question(inv[0]))
@@ -100,6 +98,8 @@ int chatbot_main(int inc, char *inv[], char *response, int n) {
 		return chatbot_do_reset(inc, inv, response, n);
 	else if (chatbot_is_save(inv[0]))
 		return chatbot_do_save(inc, inv, response, n);
+	else if (chatbot_is_smalltalk(inv[0]))
+		return chatbot_do_smalltalk(inc, inv, response, n);
 	else {
 		snprintf(response, n, "I don't understand \"%s\".", inv[0]);
 		return 0;
@@ -177,7 +177,13 @@ int chatbot_do_load(int inc, char *inv[], char *response, int n) {
 
 	if (inc > 1) {
 		if (compare_token(inv[1], "from") == 0) {
-			strcpy(filename, inv[2]);				// Get file name
+			if (inc > 2) {
+				strcpy(filename, inv[2]);			// Get file name
+			}
+			else {
+				snprintf(response, n, "File not specified.");
+				return 0;
+			}
 		}
 		else {
 			strcpy(filename, inv[1]);				// Get file name
@@ -371,12 +377,21 @@ int chatbot_do_save(int inc, char *inv[], char *response, int n) {
 
 	if (inc > 1) {
 		if (compare_token(inv[1], "as") == 0 || compare_token(inv[1], "to") == 0 ) {
-			strcpy(filename, inv[2]);				// Get file name
+			if (inc > 2) {
+				strcpy(filename, inv[2]);			// Get file name
+			}
+			else {
+				snprintf(response, n, "File not specified.");
+				return 0;
+			}	
 		}
 		else {
 			strcpy(filename, inv[1]);				// Get file name
 		}
-							
+		char *dot = strrchr(filename, '.');
+		if (!(dot && !strcmp(dot, ".ini"))) {
+			strcat(filename,".ini");
+		}
 		FILE *f = fopen(filename, "a");				// Create file if file does not exist
 		fclose(f);									// Close file
 		GetCurrentDirectory(MAX_PATH, curr_dir);	// Get current directory
