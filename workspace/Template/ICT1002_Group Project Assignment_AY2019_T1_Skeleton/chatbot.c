@@ -188,6 +188,12 @@ int chatbot_do_load(int inc, char *inv[], char *response, int n) {
 		else {
 			strcpy(filename, inv[1]);				// Get file name
 		}
+
+		char *dot = strrchr(filename, '.');			
+		if (!(dot && !strcmp(dot, ".ini"))) {		// Check if filename ends with ".ini"
+			strcat(filename,".ini");				// If not append ".ini" to end of file
+		}
+		
 		FILE *f = fopen(filename, "r");				// Check if file exists
 		if (f == NULL) {
 			snprintf(response, n, "File not found.");
