@@ -188,6 +188,12 @@ int chatbot_do_load(int inc, char *inv[], char *response, int n) {
 		else {
 			strcpy(filename, inv[1]);				// Get file name
 		}
+		
+		//checking if filename (entity) is greater than 64 characters
+		if (entitycheck(filename)!=0){
+			snprintf(response, n, "Filename must is smaller than 64 characters!");
+			return 0;
+		}
 
 		char *dot = strrchr(filename, '.');			
 		if (!(dot && !strcmp(dot, ".ini"))) {		// Check if filename ends with ".ini"
@@ -271,6 +277,27 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 		snprintf(response, n, "What do you mean?");
 		return 0;
 	}
+	
+	char strEntity[MAX_ENTITY] = "";
+	for (int i = 0; i < entity_inc; ++i) {
+		strcat(strEntity,entity[i]);
+		if (i<entity_inc-1) {
+			strcat(strEntity," ");
+		}
+	}
+	
+	//Checking if entity str is longer than 64 characters
+	if(entitycheck(strEntity)!=0){
+		snprintf(response, n, "Entity must is smaller than 64 characters!");
+		return 0;
+	}
+	
+	/*
+	if(strlen(strEntity) > 64){
+		snprintf(response, n, "Entity must is smaller than 64 characters!");
+		return 0;
+	}
+	*/
 
 	result = knowledge_get(entity_inc, inv[0], entity, response, n);
 	
@@ -291,15 +318,6 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 			strcpy(reply, "Found a similar question. Press enter if it is correct, else input the correct response.");
 		}
 		prompt_user(response, n, reply);
-		
-
-		char strEntity[MAX_ENTITY] = "";
-		for (int i = 0; i < entity_inc; ++i) {
-			strcat(strEntity,entity[i]);
-			if (i<entity_inc-1) {
-				strcat(strEntity," ");
-			}
-		}
 
 		result2 = knowledge_put(inv[0], strEntity, response); // check if user answer is inside knowledge
 		if (result2 == KB_OK)
@@ -398,6 +416,13 @@ int chatbot_do_save(int inc, char *inv[], char *response, int n) {
 		else {
 			strcpy(filename, inv[1]);				// Get file name
 		}
+		
+		//checking if filename (entity) is greater than 64 characters
+		if (entitycheck(filename)!=0){
+			snprintf(response, n, "Filename must is smaller than 64 characters!");
+			return 0;
+		}
+		
 		char *dot = strrchr(filename, '.');			
 		if (!(dot && !strcmp(dot, ".ini"))) {		// Check if filename ends with ".ini"
 			strcat(filename,".ini");				// If not append ".ini" to end of file
@@ -529,4 +554,13 @@ void getTypeDay (int currentHour, char* typeDay) {
 	else {
 		strcpy(typeDay,"Night");
 	}
+}
+
+// returns 0 if entity < 64 characters
+int entitycheck (char *entity){
+	if(strlen(entity)<64)
+		return 0;
+	else
+		return 1;
+		
 }
