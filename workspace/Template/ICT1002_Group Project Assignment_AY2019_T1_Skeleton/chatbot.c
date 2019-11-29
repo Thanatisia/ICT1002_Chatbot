@@ -191,7 +191,7 @@ int chatbot_do_load(int inc, char *inv[], char *response, int n) {
 		
 		//checking if filename (entity) is greater than 64 characters
 		if (entitycheck(filename)!=0){
-			snprintf(response, n, "Filename must is smaller than 64 characters!");
+			snprintf(response, n, "Filename must be smaller than 64 characters!");
 			return 0;
 		}
 
@@ -288,16 +288,9 @@ int chatbot_do_question(int inc, char *inv[], char *response, int n) {
 	
 	//Checking if entity str is longer than 64 characters
 	if(entitycheck(strEntity)!=0){
-		snprintf(response, n, "Entity must is smaller than 64 characters!");
+		snprintf(response, n, "Entity must be smaller than 64 characters!");
 		return 0;
 	}
-	
-	/*
-	if(strlen(strEntity) > 64){
-		snprintf(response, n, "Entity must is smaller than 64 characters!");
-		return 0;
-	}
-	*/
 
 	result = knowledge_get(entity_inc, inv[0], entity, response, n);
 	
@@ -419,7 +412,7 @@ int chatbot_do_save(int inc, char *inv[], char *response, int n) {
 		
 		//checking if filename (entity) is greater than 64 characters
 		if (entitycheck(filename)!=0){
-			snprintf(response, n, "Filename must is smaller than 64 characters!");
+			snprintf(response, n, "Filename must be smaller than 64 characters!");
 			return 0;
 		}
 		
