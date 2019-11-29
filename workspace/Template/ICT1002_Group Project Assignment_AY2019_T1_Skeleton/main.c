@@ -39,6 +39,10 @@ int main(int argc, char *argv[]) {
 			printf("%s: ", chatbot_username());
 			fgets(input, MAX_INPUT, stdin);
 			
+			// to limit 255  characters
+			if(input[strlen(input)-1] != '\n')
+				while(getc(stdin)!='\n');
+			
 			/* split it into words */
 			inc = 0;
 			inv[inc] = strtok(input, delimiters);
