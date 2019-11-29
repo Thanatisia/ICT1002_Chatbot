@@ -52,7 +52,8 @@ int knowledge_get(int inc, const char *intent, char *entity[], char *response, i
 	}
 
 	// Respond to date/time query
-	if (stristr(strEntity,"time")  != NULL || stristr(strEntity,"date")  != NULL) {
+	if (compare_token(intent, "what") == 0 && 
+	   (stristr(strEntity,"time")  != NULL || stristr(strEntity,"date")  != NULL)) {
 		time_t t = time(NULL);
 		struct tm tm = *localtime(&t);
 		if (stristr(strEntity,"time")  != NULL) {
