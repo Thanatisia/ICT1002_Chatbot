@@ -27,7 +27,7 @@
 #define MAX_ENTITY   64
 
 /* the maximum number of characters allowed in a response (including the terminating null) */
-#define MAX_RESPONSE 256
+#define MAX_RESPONSE 277 //need to include "I don't understand" + MAX_INPUT amount of words
 
 /* the maximum number of characters allowed for all the keys in a section for the ini file */
 #define MAX_KEYS 2000
@@ -63,6 +63,7 @@ int chatbot_do_save(int inc, char *inv[], char *response, int n);
 int chatbot_is_smalltalk(const char *intent);
 int chatbot_do_smalltalk(int inc, char *inv[], char *resonse, int n);
 void getTypeDay (int currentHour, char* typeDay);
+int entitycheck (char *entity);
 
 /* functions defined in knowledge.c */
 int knowledge_get(int inc, const char *intent, char *entity[], char *response, int n);
