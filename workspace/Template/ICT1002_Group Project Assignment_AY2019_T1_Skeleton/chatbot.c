@@ -172,7 +172,7 @@ int chatbot_is_load(const char *intent) {
  */
 int chatbot_do_load(int inc, char *inv[], char *response, int n) {
 	int loadedlist;
-	char filename[MAX_PATH];
+	char filename[MAX_ENTITY];
 	char curr_dir[MAX_PATH];
 
 	if (inc > 1) {
@@ -400,7 +400,7 @@ int chatbot_is_save(const char *intent) {
  */
 int chatbot_do_save(int inc, char *inv[], char *response, int n) {
 	
-	char filename[MAX_PATH];
+	char filename[MAX_ENTITY];
 	char curr_dir[MAX_PATH];
 
 	if (inc > 1) {
