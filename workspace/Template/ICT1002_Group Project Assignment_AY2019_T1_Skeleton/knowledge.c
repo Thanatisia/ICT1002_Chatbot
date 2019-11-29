@@ -35,7 +35,10 @@ typedef struct node {
 	struct node *next;
 }NODE, *NODEptr;
 
-NODEptr who[NODE_SIZE] = {}, what[NODE_SIZE]= {}, where[NODE_SIZE] = {}, head, temp;
+NODEptr who[NODE_SIZE] = {};
+NODEptr what[NODE_SIZE]= {};
+NODEptr where[NODE_SIZE] = {}; 
+NODEptr head, temp;
 
 int knowledge_get(int inc, const char *intent, char *entity[], char *response, int n) {
 
