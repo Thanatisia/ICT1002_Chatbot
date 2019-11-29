@@ -125,6 +125,11 @@ void prompt_user(char *buf, int n, const char *format, ...) {
 	
 	/* get the response from the user */
 	fgets(buf, n, stdin);
+	
+	// to limit MAX_RESPONSE characters
+	if(buf[strlen(buf)-1] != '\n')
+		while(getc(stdin)!='\n');
+	
 	char *nl = strchr(buf, '\n');
 	if (nl != NULL)
 		*nl = '\0';
